@@ -1,0 +1,68 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 31
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.ar.team.company.app.socialdelete"
+        minSdkVersion 23
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    def lottie_version = "4.1.0"
+    def toasty_version = "1.5.0"
+    def scalable_unit_size = "1.0.6"
+
+    // Gson:
+    implementation 'com.google.code.gson:gson:2.8.8'
+    //Navigation Drawer
+    implementation 'com.mxn.soul:flowingdrawer-core:2.1.0'
+    implementation 'com.nineoldandroids:library:2.4.0'
+
+    // Toasty:
+    implementation "com.github.GrenderG:Toasty:$toasty_version"
+    // LottieFiles:
+    implementation "com.airbnb.android:lottie:$lottie_version"
+    // ScalableUnitSize:
+    implementation "com.intuit.ssp:ssp-android:$scalable_unit_size"
+    implementation "com.intuit.sdp:sdp-android:$scalable_unit_size"
+
+    //circleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}

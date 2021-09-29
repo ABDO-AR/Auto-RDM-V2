@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/quick_access">
+        <menu
+            android:checkableBehavior="single"
+            android:enabled="true"
+            android:menuCategory="alternative">
+
+            <item
+                android:id="@+id/nav_chat"
+                android:icon="@drawable/ic_chat"
+                android:iconTint="@color/colorPrimaryDark"
+                android:title="@string/chat"
+                android:checked="true"
+                tools:targetApi="o" />
+
+            <item
+                android:id="@+id/nav_status"
+                android:icon="@drawable/ic_status"
+                android:iconTint="@color/colorPrimaryDark"
+                android:title="@string/status"
+                tools:targetApi="o" />
+
+            <item
+                android:id="@+id/nav_images"
+                android:icon="@drawable/ic_images"
+                android:title="@string/images"
+                tools:targetApi="o" />
+
+            <item
+                android:id="@+id/nav_videos"
+                android:icon="@drawable/ic_videos"
+                android:iconTint="@color/colorPrimaryDark"
+                android:title="@string/videos"
+                tools:targetApi="o" />
+
+            <item
+                android:id="@+id/nav_voice"
+                android:icon="@drawable/ic_voice"
+                android:iconTint="@color/colorPrimaryDark"
+                android:title="@string/voice"
+                tools:targetApi="o" />
+
+            <item
+                android:id="@+id/nav_documents"
+                android:icon="@drawable/ic_documents"
+                android:title="@string/documents"
+                tools:targetApi="o" />
+
+        </menu>
+    </item>
+
+    <item android:title="@string/help_link">
+
+        <menu
+            android:checkableBehavior="all"
+            android:enabled="true"
+            android:menuCategory="alternative">
+
+            <item
+                android:id="@+id/nav_cofig"
+                android:title="@string/config"
+                tools:targetApi="o" />
+
+            <item
+                android:id="@+id/nav_app_list"
+                android:title="@string/app_list"
+                tools:targetApi="o" />
+
+            <item
+                android:id="@+id/nav_youtube"
+                android:iconTint="@color/colorPrimaryDark"
+                android:title="@string/youtube"
+                tools:targetApi="o" />
+
+        </menu>
+    </item>
+
+    <group
+        android:checkableBehavior="single"
+        android:enabled="true"
+        android:menuCategory="system"
+        android:visible="true"/>
+
+</menu>

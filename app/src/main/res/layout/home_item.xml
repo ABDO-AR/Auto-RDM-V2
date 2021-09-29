@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_item"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="8dp"
+    style="?attr/ar_background"
+    >
+
+        <ImageView
+            android:id="@+id/img_item_home"
+            android:layout_width="40sp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
+            tools:background="@drawable/ic_chat"
+            android:contentDescription="@string/des"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+    <TextView
+        android:id="@+id/tv_item_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chat"
+
+        android:gravity="center"
+        android:textSize="10sp"
+        android:textStyle="normal"
+
+
+        tools:ignore="SmallSp" />
+
+
+
+
+
+
+</LinearLayout>

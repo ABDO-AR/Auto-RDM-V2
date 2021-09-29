@@ -1,0 +1,92 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.home.HomeActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        style="?attr/ar_def_background"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="0dp"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="?attr/ar_def_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="0dp"
+                app:title="@string/app_name"
+
+                app:titleTextColor="@color/white"
+
+                />
+        </LinearLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/home_tab_layout"
+        style="?attr/ar_tab_indicator_color"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/articulatcf_demi_normal"
+        android:paddingTop="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_45ssp"
+        android:scrollbarSize="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:tabGravity="center"
+        app:tabIndicator="@drawable/tab_indicator"
+        app:tabIndicatorAnimationMode="elastic"
+        app:tabIndicatorGravity="stretch"
+        app:tabMode="scrollable"
+        app:tabPaddingEnd="@dimen/_15sdp"
+        app:tabPaddingStart="@dimen/_15sdp"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextAppearance="@style/MyCustomTextAppearance"
+        app:textAllCaps="false" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_50sdp"
+        app:cardCornerRadius="@dimen/_40sdp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/home_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_20sdp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

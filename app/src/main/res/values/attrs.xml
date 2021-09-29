@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="ar_background" format="reference" />
+    <attr name="mr_background_chat" format="reference" />
+    <attr name="ar_chat_icon_background" format="reference" />
+    <attr name="mr_chat_icon_background" format="reference" />
+    <attr name="mr_text_color" format="color" />
+    <attr name="ar_def_fragment_card_view_background" format="reference"/>
+    <attr name="ar_def_background" format="reference" />
+    <attr name="ar_tab_indicator_color" format="reference" />
+    <attr name="splash_background_attrs" format="reference" />
+    <attr name="card_background_attrs" format="reference" />
+    <attr name="next_on_board_button_background_attrs" format="reference" />
+</resources>

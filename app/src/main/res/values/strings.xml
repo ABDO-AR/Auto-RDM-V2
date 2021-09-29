@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">AutoRDM</string>
+    <string name="des">Des</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Page1 -->
+    <string name="page_1_header">Attention</string>
+    <string name="page_1_content">By using this application you may violate the terms and services of other applications. Remember to review these terms and use of other apps before selecting them and do not select incompatible applications.</string>
+    <!-- Page2 -->
+    <string name="page_2_header">We care about our privacy and data security</string>
+    <string name="page_2_content">This application is free and to continue working on it, we have to show advertisement. To do this, our ad providers will use the information that they have gathered aboutyou. Remember, read the policies and you have to be legal aged to continue.Our ad providers and privacy policies may vary. SocialDelete does not use your notification for commercial purposes but it only save and detect its content in your device.</string>
+    <!-- Page2 -->
+    <string name="page_3_header">Ready to go</string>
+    <string name="page_3_content">By clicking accept, you accept our advertising policies and do not violate the terms of use of other applications.</string>
+    <string name="applications_mes">Applications</string>
+    <string name="select_app_mes">Select the applications you want to follow. We will save your notifications and detect changes.</string>
+    <string name="whatsapp_demo_text">Whatsapp</string>
+    <string name="setting">Setting</string>
+
+    <!-- Manifest -->
+    <string name="whatsapp_notification_listener_service">WhatsApp Notification Listener</string>
+    <string name="you">You</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="quick_access">Quick Access</string>
+    <string name="help_link">Help Links</string>
+    <string name="chat">Chat</string>
+    <string name="status">Status</string>
+    <string name="images">Images</string>
+    <string name="videos">Videos</string>
+    <string name="voice">Voice</string>
+    <string name="documents">Documents</string>
+    <string name="config">Configuration Setting</string>
+    <string name="app_list">App List</string>
+    <string name="youtube">Youtube Video Guide</string>
+    <string name="sender_name_demo">Mark</string>
+    <string name="deleted_message_demo">This message was deleted</string>
+    <string name="_05_18_pm_demo">05:18 PM</string>
+    <string name="sender_demo">Ahmed</string>
+    <string name="chat_input_hint">Type message here...</string>
+    <string name="settings_mes">Settings</string>
+    <string name="theme_mes">Theme</string>
+    <string name="system_mes">System</string>
+    <string name="_4">4:30</string>
+    <string name="date_demooo">11 March 21, 4:45 PM</string>
+    <string name="_1_10">1/10</string>
+    <string name="demo_f_e_name">PDF File</string>
+    <string name="android_developers_file_pdf">ANDROID DEVELOPERS FILE.PDF</string>
+    <string name="_3mp">3MP</string>
+    <string name="_1">1</string>
+    <string name="channel_name">AutoRDM</string>
+    <string name="channel_description">Message Deleted Was Found</string>
+</resources>

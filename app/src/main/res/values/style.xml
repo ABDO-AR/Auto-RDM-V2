@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="card_background_dark">
+        <item name="android:background">@drawable/card_background_board_dark</item>
+    </style>
+
+    <style name="next_on_board_button_background_dark">
+        <item name="android:background">@drawable/image_button_frame_dark</item>
+    </style>
+
+    <style name="splash_background_dark">
+        <item name="android:background">@drawable/splash_background_dark</item>
+    </style>
+    <style name="splash_background_light">
+        <item name="android:background">@drawable/splash_background</item>
+    </style>
+
+    <style name="ar_background_dark">
+        <item name="android:background">@color/dark_grey</item>
+    </style>
+
+
+
+
+
+    <style name="mr_text_light">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:tint">@color/dark_grey</item>
+
+    </style>
+    <style name="mr_text_dark">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:tint">@color/grey</item>
+    </style>
+
+    <style name="card_background_light">
+        <item name="android:background">@drawable/card_background_board</item>
+    </style>
+
+    <style name="next_on_board_button_background_light">
+        <item name="android:background">@drawable/image_button_frame</item>
+    </style>
+
+
+    <style name="ar_background_light">
+        <item name="android:background">@color/white</item>
+
+    </style>
+    <style name="mr_background_chat_light">
+        <item name="android:background">@color/colorPrimary</item>
+
+    </style>
+    <style name="mr_background_chat_dark">
+        <item name="android:background">@color/dark_grey</item>
+
+    </style>
+
+    <style name="ar_def_background_dark">
+        <item name="android:background">@color/dark_grey</item>
+    </style>
+    <style name="ar_def_background_light">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="ar_tab_indicator_light">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="tabIndicatorColor">@color/grey1</item>
+        <item name="tabTextColor">@color/grey2</item>
+
+    </style>
+
+
+    <style name="ar_tab_indicator_dark">
+        <item name="android:background">@color/dark_grey</item>
+        <item name="tabIndicatorColor">@color/light_green</item>
+        <item name="tabTextColor">@color/grey2</item>
+
+    </style>
+
+
+
+    <style name="ar_def_fragment_card_view_background_dark">
+        <item name="android:backgroundTint">@color/dark_grey</item>
+    </style>
+    <style name="ar_def_fragment_card_view_background_light">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+
+    <style name="ar_chat_icon_background_dark">
+        <item name="srcCompat">@drawable/ic_back_chat_button</item>
+    </style>
+    <style name="ar_chat_icon_background_light">
+        <item name="srcCompat">@drawable/ic_back_chat_button_light2</item>
+    </style>
+
+    <style name="mr_chat_icon_background_dark">
+        <item name="srcCompat">@drawable/ic_back_chat_button_light2</item>
+    </style>
+    <style name="mr_chat_icon_background_light">
+        <item name="srcCompat">@drawable/ic_back_chat_button_light2</item>
+    </style>
+
+</resources>

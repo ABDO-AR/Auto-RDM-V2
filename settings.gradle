@@ -1,0 +1,2 @@
+rootProject.name = "AutoRDM2"
+include ':app'
