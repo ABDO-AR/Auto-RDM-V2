@@ -10,14 +10,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 
-import com.ar.team.company.app.autordm.control.adapter.ImagesAdapter;
+import com.ar.team.company.app.autordm.control.adapter.MediaAdapter;
 import com.ar.team.company.app.autordm.control.adapter.SliderImageAdapter;
-import com.ar.team.company.app.autordm.control.adapter.StatusAdapter;
 import com.ar.team.company.app.autordm.databinding.ActivityShowImageBinding;
 
 import java.util.List;
 
-@SuppressWarnings({"FieldCanBeLocal", "unused"})
+@SuppressWarnings({"FieldCanBeLocal", "unused", "SetTextI18n"})
 public class ShowImageActivity extends AppCompatActivity {
 
     // This For Control The XML-Main Views:
@@ -37,8 +36,8 @@ public class ShowImageActivity extends AppCompatActivity {
         setContentView(view); // SET THE VIEW CONTENT TO THE (VIEW).
         // Initializing:
         index = getIntent().getExtras().getInt("Index");
-        if (getIntent().getExtras().getString("TAG").equals("Images")) bitmaps = ImagesAdapter.staticBitmaps;
-        else bitmaps = StatusAdapter.staticBitmaps;
+        if (getIntent().getExtras().getString("TAG").equals("Images"))
+            bitmaps = MediaAdapter.staticBitmaps;
         adapter = new SliderImageAdapter(this, bitmaps);
         // PreparingTextView:
         binding.imagesSizeTextView.setText((index + 1) + "/" + bitmaps.size());

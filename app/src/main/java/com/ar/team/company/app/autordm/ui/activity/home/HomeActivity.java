@@ -56,7 +56,6 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     private static FileObserver imagesObserver;
     private static FileObserver videosObserver;
     private static FileObserver voicesObserver;
-    private static FileObserver statusObserver;
     private static FileObserver documentsObserver;
     // Permissions:
     private static final String requestPermName = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -125,8 +124,6 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         videosObserver = new ARFilesObserver(ARAccess.WHATSAPP_VIDEOS_PATH, model);
         // Initializing(VoicesObserver):
         voicesObserver = new ARFilesObserver(ARAccess.WHATSAPP_VOICES_PATH, model);
-        // Initializing(StatusObserver):
-        statusObserver = new ARFilesObserver(ARAccess.WHATSAPP_STATUS_PATH, model);
         // Initializing(DocumentsObserver):
         documentsObserver = new ARFilesObserver(ARAccess.WHATSAPP_DOCUMENTS_PATH, model);
         // Debugging:
@@ -139,7 +136,6 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         imagesObserver.startWatching();
         videosObserver.startWatching();
         voicesObserver.startWatching();
-        statusObserver.startWatching();
         documentsObserver.startWatching();
         // Preparing:
         tempThread = new Thread(this::preparingObservers);
@@ -158,11 +154,7 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
             // Setting:
             manager.setBooleanPreferences(ARPreferencesManager.INIT_TEMP_DIR, true);
             // StartInitializing:
-            model.startImageOperation();
-            model.startVideoOperation();
-            model.startVoiceOperation();
-            model.startStatusOperation();
-            model.startDocumentOperation();
+            model.startMediaOperations();
         }
         // Hiding(Dialog):
         runOnUiThread(this::initUiThread);
@@ -184,15 +176,6 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
             // Checking:
             if (state) imagesObserver.startWatching();
             else imagesObserver.stopWatching();
-        }
-    }
-
-    public static void setStatusObserver(boolean state) {
-        // Checking:
-        if (statusObserver != null) {
-            // Checking:
-            if (state) statusObserver.startWatching();
-            else statusObserver.stopWatching();
         }
     }
 
@@ -269,17 +252,9 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     @Override
     protected void onDestroy() {
         // Initializing:
-        boolean imagesState = model.getImagesThread() != null;
-        boolean videosState = model.getVideosThread() != null;
-        boolean voicesState = model.getVoicesThread() != null;
-        boolean statusState = model.getStatusThread() != null;
-        boolean documentsState = model.getDocumentsThread() != null;
+        boolean mediaState = model.getMediaThread() != null;
         // Checking(&Interrupting):
-        if (imagesState) model.getImagesThread().interrupt();
-        if (videosState) model.getVideosThread().interrupt();
-        if (voicesState) model.getVoicesThread().interrupt();
-        if (statusState) model.getStatusThread().interrupt();
-        if (documentsState) model.getDocumentsThread().interrupt();
+        if (mediaState) model.getMediaThread().interrupt();
         // Super:
         super.onDestroy();
     }

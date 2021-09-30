@@ -10,6 +10,7 @@ public class Chat {
     private final String chatDate;
     private final List<Messages> messages;
     // Checking:
+    private boolean isHasNewMessage = false;
     private boolean isNewMessage = false;
 
     // Constructor:
@@ -18,8 +19,6 @@ public class Chat {
         this.chatDate = chatDate;
         this.messages = messages;
     }
-
-
 
     // InnerClasses:
     public static class Messages {
@@ -58,6 +57,14 @@ public class Chat {
 
     public void setNewMessage(boolean newMessage) {
         isNewMessage = newMessage;
+    }
+
+    public boolean isHasNewMessage() {
+        return isHasNewMessage;
+    }
+
+    public void setHasNewMessage(boolean hasNewMessage) {
+        isHasNewMessage = hasNewMessage;
     }
 
     // Getters:

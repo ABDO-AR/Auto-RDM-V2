@@ -60,13 +60,14 @@ public class NotificationListener extends NotificationListenerService {
                     boolean s1 = sbn.getPackageName().equals(WHATSAPP_PACKAGE_NAME);
                     boolean s2 = !sender.equals("WhatsApp") && !sender.equals("WhatsApp Web") && !sender.equals("WhatsApp Desktop");
                     boolean s3 = !sender.equals("Me") && !sender.equals("You");
-                    boolean state = s1 && s2 && s3;
+                    boolean s4 = !sender.equals("Deleting messages...");
+                    boolean state = s1 && s2 && s3 && s4;
                     // Fields:
                     ARPreferencesManager manager = new ARPreferencesManager(getApplicationContext());
                     String currentPackages = manager.getStringPreferences(ARPreferencesManager.PACKAGE_APP_NAME);
                     List<Chat.Messages> messages = new ArrayList<>();
                     // Initializing(Data):
-                    String msg = sbn.getNotification().extras.getString(Notification.EXTRA_TEXT);
+                    String msg = sbn.getNotification().extras.getString(Notification.EXTRA_TEXT) + "";
                     String currentSenders = manager.getStringPreferences(ARPreferencesManager.SENDER_NAME);
                     // Checking:
                     boolean deletedMsgState = !msg.equals("This message was deleted");
@@ -119,10 +120,15 @@ public class NotificationListener extends NotificationListenerService {
                                             // Adding:
                                             chat.getMessages().addAll(messages);
                                             // SettingNewMessage:
+                                            chat.setHasNewMessage(true);
                                             chat.setNewMessage(true);
                                             ARPreferencesManager.sender = chat.getSender();
                                         }
-                                    } else chat.getMessages().addAll(messages); // Adding.
+                                    } else {
+                                        // Adding:
+                                        chat.getMessages().addAll(messages);
+                                        chat.setHasNewMessage(true);
+                                    }
                                     // AddingSender($Preferences):
                                     if (!currentSenders.contains(sender)) {
                                         // Initializing:
@@ -136,14 +142,17 @@ public class NotificationListener extends NotificationListenerService {
                             if (!currentSenders.contains(sender)) {
                                 // Initializing:
                                 Chat chat = new Chat(sender, getCurrentDate(), messages);
+                                chat.setHasNewMessage(true);
                                 // AddingTheNewChat:
                                 chats.add(chat);
                             }
                         } else {
                             // Initializing:
                             chats = new ArrayList<>();
+                            Chat chat = new Chat(sender, getCurrentDate(), messages);
+                            chat.setHasNewMessage(true);
                             // Developing:
-                            chats.add(new Chat(sender, getCurrentDate(), messages));
+                            chats.add(chat);
                         }
                         // SettingPreferences:
                         manager.setStringPreferences(ARPreferencesManager.WHATSAPP_CHATS, ARUtils.fromChatsToJson(chats));

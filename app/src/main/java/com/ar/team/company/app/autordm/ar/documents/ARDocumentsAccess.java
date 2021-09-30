@@ -28,14 +28,14 @@ public class ARDocumentsAccess {
     }
 
     // Method(Static):
-    public static List<Document> getDocumentsWithDirs(Context context) {
+    public static List<File> getDocumentsWithDirs(Context context) {
         // Control:
         HomeActivity.setDocumentsObserver(false);
         // Initializing:
         ARPreferencesManager manager = new ARPreferencesManager(context, ARPreferencesManager.MODE_FILES);
         File documentsDir = ARAccess.getAppDir(context, ARAccess.DOCUMENTS_DIR);
         File[] whatsAppDocumentsFiles = getDocumentsFiles();
-        List<Document> documents = new ArrayList<>();
+        List<File> returningFiles = new ArrayList<>();
         // Initializing(State):
         boolean state1 = Objects.requireNonNull(documentsDir.listFiles()).length != 0;
         // Looping:
@@ -48,30 +48,10 @@ public class ARDocumentsAccess {
             for (File copiedFile : Objects.requireNonNull(documentsDir.listFiles())) {
                 // Checking:
                 if (!copiedFile.isDirectory()) {
-                    // Initializing:
-                    String fileSize = getFileSize(copiedFile);
                     // Getting all files name:
                     copied.append(copiedFile.getName()).append(",");
                     // Adding:
-                    if (copiedFile.getAbsolutePath().endsWith(".pdf")) {
-                        // Adding:
-                        documents.add(new Document(copiedFile.getName(), fileSize, "PDF File", ContextCompat.getDrawable(context, R.drawable.folder_blue_icon), ContextCompat.getColor(context, R.color.folder_blue)));
-                    } else if (copiedFile.getAbsolutePath().endsWith(".txt")) {
-                        // Adding:
-                        documents.add(new Document(copiedFile.getName(), fileSize, "DOC File", ContextCompat.getDrawable(context, R.drawable.folder_orange_icon), ContextCompat.getColor(context, R.color.folder_orange)));
-                    } else if (copiedFile.getAbsolutePath().endsWith(".rar")) {
-                        // Adding:
-                        documents.add(new Document(copiedFile.getName(), fileSize, "RAR File", ContextCompat.getDrawable(context, R.drawable.folder_purple_icon), ContextCompat.getColor(context, R.color.folder_purple)));
-                    } else if (copiedFile.getAbsolutePath().endsWith(".apk")) {
-                        // Adding:
-                        documents.add(new Document(copiedFile.getName(), fileSize, "APK File", ContextCompat.getDrawable(context, R.drawable.folder_red_icon), ContextCompat.getColor(context, R.color.folder_red)));
-                    } else if (copiedFile.getAbsolutePath().endsWith(".zip")) {
-                        // Adding:
-                        documents.add(new Document(copiedFile.getName(), fileSize, "ZIP File", ContextCompat.getDrawable(context, R.drawable.folder_green_icon), ContextCompat.getColor(context, R.color.folder_green)));
-                    } else {
-                        // Adding:
-                        documents.add(new Document(copiedFile.getName(), fileSize, "OTHER File", ContextCompat.getDrawable(context, R.drawable.folder_pink_icon), ContextCompat.getColor(context, R.color.folder_pink)));
-                    }
+                    returningFiles.add(copiedFile);
                 }
             }
             // Checking:
@@ -109,7 +89,7 @@ public class ARDocumentsAccess {
         // ReRunObserver:
         HomeActivity.setDocumentsObserver(true);
         // Retuning:
-        return documents;
+        return returningFiles;
     }
 
     public static String getFileSize(File file) {

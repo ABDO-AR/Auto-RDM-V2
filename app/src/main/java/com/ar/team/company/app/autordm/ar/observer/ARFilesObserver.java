@@ -40,7 +40,7 @@ public class ARFilesObserver extends FileObserver {
                 // Debugging:
                 Log.d(TAG, "onEventCreate: " + s);
                 // StartOperations:
-                runOperations();
+                model.startMediaOperations();
             }
         } else {
             // Checking:
@@ -48,22 +48,11 @@ public class ARFilesObserver extends FileObserver {
                 // Debugging:
                 Log.d(TAG, "onEventCreate: " + s);
                 // StartOperations:
-                model.startVoiceOperation();
+                model.startMediaOperations();
                 // Increment:
                 tempVoices++;
             }
         }
-    }
-
-    // Method(Run):
-    private void runOperations() {
-        // Checking(IF):
-        if (path.equals(ARAccess.WHATSAPP_IMAGES_PATH)) model.startImageOperation();
-            // Checking(ELSE-IF):
-        else if (path.equals(ARAccess.WHATSAPP_VIDEOS_PATH)) model.startVideoOperation();
-        else if (path.equals(ARAccess.WHATSAPP_VOICES_PATH)) model.startVoiceOperation();
-        else if (path.equals(ARAccess.WHATSAPP_STATUS_PATH)) model.startStatusOperation();
-        else if (path.equals(ARAccess.WHATSAPP_DOCUMENTS_PATH)) model.startDocumentOperation();
     }
 
     // Methods(Reset):

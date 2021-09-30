@@ -38,7 +38,7 @@ public class ARAccess {
     // Fields(Temp):
     public static final String TEMP_DIR = "SD--TEMP--DIR";
     // Fields(Debug):
-    private static final String TAG = "ARAccess";
+    public static final String TAG = "ARAccess";
 
     // Methods(Main):
     public static File getAppDir(Context context, String dir) {
@@ -49,6 +49,8 @@ public class ARAccess {
             // Developing:
             MAIN_FILE_MAP = createAccessDirs(context, IMAGES_DIR, VIDEOS_DIR, VOICES_DIR, STATUS_DIR, DOCUMENTS_DIR);
         }
+        // Debugging:
+        Log.d(TAG, "A11-OP: Start Getting Dir :: " + dir);
         // Returning:
         return MAIN_FILE_MAP.get(dir);
     }
@@ -108,6 +110,8 @@ public class ARAccess {
                 try {
                     // Creating:
                     Files.createDirectory(Paths.get(accessDir.getAbsolutePath()));
+                    // Debugging:
+                    Log.d(TAG, "A11-OP: Media Dir Has Been Created At :: " + accessDir.getAbsolutePath());
                 } catch (IOException e) {
                     // Debugging:
                     Log.d(TAG, "createAccessDir: " + e.toString());
@@ -135,6 +139,8 @@ public class ARAccess {
                     try {
                         // Creating:
                         Files.createDirectory(Paths.get(accessDir.getAbsolutePath()));
+                        // Debugging:
+                        Log.d(TAG, "A11-OP: Media dir has been created at :: " + accessDir.getAbsolutePath());
                     } catch (IOException e) {
                         // Debugging:
                         Log.d(TAG, "createAccessDir: " + e.toString());
@@ -153,6 +159,8 @@ public class ARAccess {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void createTempDirAt(Context context, String dir) {
+        // Debugging:
+        Log.d(TAG, "A11-OP: Start Creating TEMP-DIR At :: " + dir);
         // Initializing:
         File tempDir = new File(context.getExternalFilesDir(null), ROOT_DIR + "/" + dir + "/" + TEMP_DIR);
         // Checking:
@@ -163,18 +171,26 @@ public class ARAccess {
                 try {
                     // Creating:
                     Files.createDirectory(Paths.get(tempDir.getAbsolutePath()));
+                    // Debugging:
+                    Log.d(TAG, "A11-OP: TEMP-DIR Has Been Created At :: " + tempDir.getAbsolutePath());
                 } catch (IOException e) {
                     // Debugging:
                     Log.d(TAG, "createAccessDir: " + e.toString());
+                    // Debugging:
+                    Log.d(TAG, "A11-OP: TEMP-DIR Error :: C1");
                 }
             } else tempDir.mkdir();
         } else {
             // It's already exits:
             Log.d(TAG, "createTempDirAt: temp dir is already exits at :: " + tempDir.getAbsolutePath());
+            // Debugging:
+            Log.d(TAG, "A11-OP: TEMP-DIR Already Exits At :: " + tempDir.getAbsolutePath());
         }
     }
 
     public static void copy(File src, File dst) {
+        // Debugging:
+        Log.d(TAG, "A11-OP: Files Start Copy Operations");
         // Trying:
         try (InputStream in = new FileInputStream(src)) {
             // Trying:
@@ -190,11 +206,17 @@ public class ARAccess {
             } catch (IOException e) {
                 // StackTrace:
                 e.printStackTrace();
+                // Debugging:
+                Log.d(TAG, "A11-OP: Files Error While Coping :: C1");
             }
         } catch (IOException e) {
             // StackTrace:
             e.printStackTrace();
+            // Debugging:
+            Log.d(TAG, "A11-OP: Files Error While Coping :: C2");
         }
+        // Debugging:
+        Log.d(TAG, "A11-OP: Files Copied Successfully");
     }
 
 }

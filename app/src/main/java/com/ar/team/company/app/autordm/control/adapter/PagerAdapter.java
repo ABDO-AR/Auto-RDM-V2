@@ -7,11 +7,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.ar.team.company.app.autordm.ui.fragment.home.ChatFragment;
-import com.ar.team.company.app.autordm.ui.fragment.home.DocumentFragment;
-import com.ar.team.company.app.autordm.ui.fragment.home.ImagesFragment;
-import com.ar.team.company.app.autordm.ui.fragment.home.StatusFragment;
-import com.ar.team.company.app.autordm.ui.fragment.home.VideosFragment;
-import com.ar.team.company.app.autordm.ui.fragment.home.VoiceFragment;
+import com.ar.team.company.app.autordm.ui.fragment.home.MediaFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,11 +32,11 @@ public class PagerAdapter extends FragmentStateAdapter {
     private void initData() {
         // AddingFragments(Content):
         addData(new ChatFragment(), "Chat");
-        addData(new StatusFragment(), "Status");
-        addData(new ImagesFragment(), "Images");
-        addData(new VideosFragment(), "Videos");
-        addData(new VoiceFragment(), "Voice");
-        addData(new DocumentFragment(), "Document");
+        addData(new MediaFragment(), "Media");
+        //addData(new ImagesFragment(), "Images");
+        //addData(new VideosFragment(), "Videos");
+        //addData(new VoiceFragment(), "Voice");
+        //addData(new DocumentFragment(), "Document");
     }
 
     // AddDataMethod:

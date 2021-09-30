@@ -2,6 +2,7 @@ package com.ar.team.company.app.autordm.ar.voices;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.ar.team.company.app.autordm.ar.access.ARAccess;
 import com.ar.team.company.app.autordm.ar.observer.ARFilesObserver;
@@ -65,6 +66,8 @@ public class ARVoicesAccess {
                     }
                 }
             }
+            // Debugging:
+            Log.d(ARAccess.TAG, "A11-OP: VoicesAccess WhatsApp Files Name :: " + whatsapp);
         } else {
             // Initializing:
             int tempIndex = 0;
@@ -98,7 +101,7 @@ public class ARVoicesAccess {
         String finalPath = externalStorageDirectory + whatsappImagesPath;
         // Getting:
         File[] dirs = new File(finalPath).listFiles();
-        if (dirs == null || dirs.length <= 0) {
+        if (dirs == null) {
             // Initializing(Paths2):
             String whatsappImagesPath2 = "/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Voice Notes";
             String finalPath2 = externalStorageDirectory + whatsappImagesPath2;

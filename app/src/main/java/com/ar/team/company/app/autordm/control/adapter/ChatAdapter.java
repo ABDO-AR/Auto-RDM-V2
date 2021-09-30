@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.control.notifications.NotificationListener;
+import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.model.ARIcon;
 import com.ar.team.company.app.autordm.model.Chat;
 import com.ar.team.company.app.autordm.ui.activity.show.chat.ShowChatActivity;
@@ -27,12 +29,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     // Fields:
     private final Context context;
     private final List<Chat> chats;
+    // Manger:
+    private final ARPreferencesManager manager;
 
     // Constructor:
     public ChatAdapter(Context context, List<Chat> chats) {
         // Initializing:
         this.context = context;
         this.chats = chats;
+        this.manager = new ARPreferencesManager(context);
         // Notify:
         notifyDataSetChanged();
     }
@@ -75,18 +80,39 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
             }
         }
+        // Checking:
+        if (chat.isHasNewMessage()) {
+            // Setting:
+            holder.binding.materialCardView2.setVisibility(View.VISIBLE);
+            holder.binding.messagesNumberTextView.setText(String.valueOf(chat.getMessages().size()));
+        } else {
+            // Setting:
+            holder.binding.materialCardView2.setVisibility(View.GONE);
+        }
         // OnClickChat:
         Icon finalSendIcon = sendIcon;
-        holder.binding.messagesNumberTextView.setText(String.valueOf(chat.getMessages().size()));
         holder.binding.getRoot().setOnClickListener(v -> chatClicked(chat, finalSendIcon));
     }
 
     private void chatClicked(Chat chat, Icon icon) {
+        // PreparingChat:
+        List<Chat> sharedChats = ARUtils.fromJsonToChats(manager.getStringPreferences(ARPreferencesManager.WHATSAPP_CHATS));
+        // Looping:
+        for (Chat sharedChat : sharedChats) {
+            // Checking:
+            if (sharedChat.getSender().equals(chat.getSender())) {
+                // Editing:
+                sharedChat.setHasNewMessage(false);
+            }
+        }
+        // Adding(Again):
+        manager.setStringPreferences(ARPreferencesManager.WHATSAPP_CHATS, ARUtils.fromChatsToJson(sharedChats));
         // Initializing:
         Intent intent = new Intent(context, ShowChatActivity.class);
         // Developing:
         intent.putExtra("Icon", icon);
         intent.putExtra("Chat", ARUtils.fromChatToJson(chat));
+        // Starting:
         context.startActivity(intent);
     }
 

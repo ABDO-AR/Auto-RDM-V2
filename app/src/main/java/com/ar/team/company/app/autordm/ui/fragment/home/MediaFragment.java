@@ -1,42 +1,42 @@
 package com.ar.team.company.app.autordm.ui.fragment.home;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-
-import com.ar.team.company.app.autordm.control.adapter.VideosAdapter;
-import com.ar.team.company.app.autordm.databinding.FragmentVideosBinding;
+import com.ar.team.company.app.autordm.control.adapter.MediaAdapter;
+import com.ar.team.company.app.autordm.databinding.FragmentMediaBinding;
+import com.ar.team.company.app.autordm.model.ARMedia;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeViewModel;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.util.List;
-
-@SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class VideosFragment extends Fragment {
+@SuppressWarnings("FieldCanBeLocal")
+public class MediaFragment extends Fragment {
 
     // This for control the Fragment-Layout views:
-    private FragmentVideosBinding binding;
+    private FragmentMediaBinding binding;
     private HomeViewModel model; // MainModel for our fragment.
-    // Adapters:
-    private VideosAdapter adapter;
+    // Adapter:
+    private MediaAdapter adapter;
     // TAGS:
-    private static final String TAG = "VideosFragment";
+    @SuppressWarnings("unused")
+    public static final String TAG = "MediaFragment";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the fragment layout:
-        binding = FragmentVideosBinding.inflate(inflater, container, false);
+        binding = FragmentMediaBinding.inflate(inflater, container, false);
         return binding.getRoot(); // Get the fragment layout root.
     }
 
@@ -46,20 +46,20 @@ public class VideosFragment extends Fragment {
         // Initializing:
         model = new ViewModelProvider(this).get(HomeViewModel.class);
         // StartOperations:
-        model.startVideoOperation();
+        model.startMediaOperations();
         // Observing:
-        model.getVideosLiveData().observe(getViewLifecycleOwner(), this::onVideosChanged);
+        model.getMediaLiveData().observe(getViewLifecycleOwner(), this::onMediaChanged);
     }
 
-    // OnVideosChange:
-    private void onVideosChanged(List<File> videos) {
+    // OnMediaChange:
+    private void onMediaChanged(ARMedia media) {
         // Loading:
         isLoading(true);
         // Initializing:
-        adapter = new VideosAdapter(requireContext(), videos);
+        adapter = new MediaAdapter(requireContext(), media);
         // Preparing(RecyclerView):
-        binding.videosRecyclerView.setAdapter(adapter);
-        binding.videosRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
+        binding.mediaRecyclerView.setAdapter(adapter);
+        binding.mediaRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         // Loading:
         new Handler(Looper.getMainLooper()).postDelayed(() -> isLoading(false), 500);
     }
@@ -68,15 +68,15 @@ public class VideosFragment extends Fragment {
     private void isLoading(boolean loading) {
         // Developing:
         binding.progress.setVisibility(loading ? View.VISIBLE : View.GONE);
-        binding.videosRecyclerView.setVisibility(loading ? View.GONE : View.VISIBLE);
+        binding.mediaRecyclerView.setVisibility(loading ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void onDestroy() {
         // Initializing:
-        boolean videosState = model.getVideosThread() != null;
+        boolean mediaState = model.getMediaThread() != null;
         // Checking(&Interrupting):
-        if (videosState) model.getVideosThread().interrupt();
+        if (mediaState) model.getMediaThread().interrupt();
         // Super:
         super.onDestroy();
     }
