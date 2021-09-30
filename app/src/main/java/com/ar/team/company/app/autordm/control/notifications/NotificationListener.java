@@ -120,7 +120,7 @@ public class NotificationListener extends NotificationListenerService {
                                             chat.getMessages().addAll(messages);
                                             // SettingNewMessage:
                                             chat.setNewMessage(true);
-                                            ARPreferencesManager.sender= chat.getSender();
+                                            ARPreferencesManager.sender = chat.getSender();
                                         }
                                     } else chat.getMessages().addAll(messages); // Adding.
                                     // AddingSender($Preferences):
@@ -149,10 +149,10 @@ public class NotificationListener extends NotificationListenerService {
                         manager.setStringPreferences(ARPreferencesManager.WHATSAPP_CHATS, ARUtils.fromChatsToJson(chats));
                         // Debugging:
                         ARUtils.debug(TAG, NP_FIELD, manager.getStringPreferences(ARPreferencesManager.WHATSAPP_CHATS));
-                    }else if (msg.equals("This message was deleted")){
+                    } else if (msg.equals("This message was deleted")) {
                         // Creating:
-                        createNotificationChannel();
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                        createNotificationChannel(notificationManager);
                         // Preparing:
                         // Create an explicit intent for an Activity in your app
                         Intent intent = new Intent(this, HomeActivity.class);
@@ -177,7 +177,7 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     // Method(Notification):
-    private void createNotificationChannel() {
+    private void createNotificationChannel(NotificationManager notificationManager) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -188,7 +188,6 @@ public class NotificationListener extends NotificationListenerService {
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
     }
