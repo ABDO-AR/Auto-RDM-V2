@@ -70,7 +70,7 @@ public class NotificationListener extends NotificationListenerService {
                     String msg = sbn.getNotification().extras.getString(Notification.EXTRA_TEXT) + "";
                     String currentSenders = manager.getStringPreferences(ARPreferencesManager.SENDER_NAME);
                     // Checking:
-                    boolean deletedMsgState = !msg.equals("This message was deleted");
+                    boolean deletedMsgState = !msg.equals("This message was deleted") && !msg.equals("\u200Fتم حذف هذه الرسالة");
                     // Design:
                     String firstChar;
                     // Trying:
@@ -90,7 +90,7 @@ public class NotificationListener extends NotificationListenerService {
                         }
                     }
                     // CheckingStatusBarNotification:
-                    if (state && !msg.equals(firstChar + " new messages") && deletedMsgState) {
+                    if (state && !msg.equals(firstChar + " new messages") && !msg.equals(firstChar + " رسائل جديدة")  && !msg.equals("رسالتان ٢ جديدتان") && deletedMsgState) {
                         // Initializing(Replay):
                         Notification.WearableExtender extender = new Notification.WearableExtender(sbn.getNotification());
                         List<Notification.Action> actions = new ArrayList<>(extender.getActions());
@@ -158,7 +158,7 @@ public class NotificationListener extends NotificationListenerService {
                         manager.setStringPreferences(ARPreferencesManager.WHATSAPP_CHATS, ARUtils.fromChatsToJson(chats));
                         // Debugging:
                         ARUtils.debug(TAG, NP_FIELD, manager.getStringPreferences(ARPreferencesManager.WHATSAPP_CHATS));
-                    } else if (msg.equals("This message was deleted")) {
+                    } else if (msg.equals("This message was deleted") || msg.equals("\u200Fتم حذف هذه الرسالة")) {
                         // Creating:
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         createNotificationChannel(notificationManager);
