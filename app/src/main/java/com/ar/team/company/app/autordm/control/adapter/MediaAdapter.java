@@ -8,10 +8,12 @@ import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -36,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -45,6 +48,8 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final ARMedia media;
     // Fields(MediaPlayer):
     private MediaPlayer player;
+    private Handler seekHandler = new Handler();
+    private Runnable run;
     // Fields(Temp):
     private int index = 9999999;
     // Static(BitMaps):
@@ -133,8 +138,10 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
             String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             // Checking:
-            if (position == index) voicesHolder.binding.playVoiceButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_pause));
-            else voicesHolder.binding.playVoiceButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_play));
+            if (position == index)
+                voicesHolder.binding.playVoiceButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_pause));
+            else
+                voicesHolder.binding.playVoiceButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_play));
             // Developing:
             voicesHolder.binding.durationTextView.setText(formatsMilliSeconds(Long.parseLong(duration)));
             voicesHolder.binding.dateTextView.setText(format.format(file.lastModified()));
@@ -226,7 +233,8 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // Looping:
         for (int index = 0; index < bitmaps.size(); index++) {
             // Checking:
-            if (bitmapsFiles.get(index).getName().equals(media.getContent().get(pos).getName())) realPos = index;
+            if (bitmapsFiles.get(index).getName().equals(media.getContent().get(pos).getName()))
+                realPos = index;
         }
         // PuttingExtras:
         intent.putExtra("Index", realPos);
@@ -260,6 +268,63 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 player.setDataSource(audioPath);
                 player.prepare();
                 player.start();
+                // StartSeeking:
+                binding.seekBar.setMax(player.getDuration());
+                binding.seekBar.setTag(position);
+                binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        if (player != null && b) {
+                            player.seekTo(i);
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+                run = () -> {
+                    if (player != null && player.isPlaying()) {
+                        // Updateing SeekBar every 100 miliseconds
+                        binding.seekBar.setProgress(player.getCurrentPosition());
+                        seekHandler.postDelayed(run, 100);
+                        //For Showing time of audio(inside runnable)
+                        int miliSeconds = player.getCurrentPosition();
+                        if (miliSeconds != 0) {
+                            //if audio is playing, showing current time;
+                            long minutes = TimeUnit.MILLISECONDS.toMinutes(miliSeconds);
+                            long seconds = TimeUnit.MILLISECONDS.toSeconds(miliSeconds);
+                            if (minutes == 0) {
+                                binding.durationTextView.setText("0:" + seconds + "/" + calculateDuration(player.getDuration()));
+                            } else {
+                                if (seconds >= 60) {
+                                    long sec = seconds - (minutes * 60);
+                                    binding.durationTextView.setText(minutes + ":" + sec + "/" + calculateDuration(player.getDuration()));
+                                }
+                            }
+                        } else {
+                            //Displaying total time if audio not playing
+                            int totalTime = player.getDuration();
+                            long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime);
+                            long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTime);
+                            if (minutes == 0) {
+                                binding.durationTextView.setText("0:" + seconds);
+                            } else {
+                                if (seconds >= 60) {
+                                    long sec = seconds - (minutes * 60);
+                                    binding.durationTextView.setText(minutes + ":" + sec);
+                                }
+                            }
+                        }
+                    }
+                };
+                run.run();
                 // Debugging:
                 Log.d(TAG, "audioMethod: StartPlaying Audio");
             } catch (IOException e) {
@@ -276,6 +341,9 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 player = new MediaPlayer();
                 // SettingRes:
                 binding.playVoiceButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_play));
+                // StopSeeking:
+                binding.seekBar.setProgress(0);
+                binding.seekBar.setOnSeekBarChangeListener(null);
                 // Debugging:
                 Log.d(TAG, "audioMethod: StopPlaying Audio");
             } catch (Exception e) {
@@ -291,6 +359,21 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // Debugging:
         Log.d(TAG, "audioMethod: EndingOfMethod");
         Log.d(TAG, "audioMethod: --------------------------------------------------");
+    }
+
+    private String calculateDuration(int duration) {
+        String finalDuration = "";
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration);
+        if (minutes == 0) {
+            finalDuration = "0:" + seconds;
+        } else {
+            if (seconds >= 60) {
+                long sec = seconds - (minutes * 60);
+                finalDuration = minutes + ":" + sec;
+            }
+        }
+        return finalDuration;
     }
 
     // Method(OnPlayerCompleted):
