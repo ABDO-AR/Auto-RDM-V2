@@ -23,7 +23,7 @@ public class ARVideosAccess {
     }
 
     // Method(Static):
-    public static List<File> getVideosWithDirs(Context context) {
+    public synchronized static List<File> getVideosWithDirs(Context context) {
         // Control:
         HomeActivity.setVideosObserver(false);
         // Initializing:
@@ -99,7 +99,7 @@ public class ARVideosAccess {
         File[] backupFiles = new File(finalPath2).listFiles(file -> isVideos(file.getAbsolutePath()));
         File[] files = new File(finalPath).listFiles(file -> isVideos(file.getAbsolutePath()));
         // Checking:
-        if (files == null || files.length <= 0) files = backupFiles;
+        if (files == null) files = backupFiles;
         // Returning:
         return files;
     }

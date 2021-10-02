@@ -27,7 +27,7 @@ public class ARVoicesAccess {
     }
 
     // Method(Static):
-    public static List<File> getVoicesWithDirs(Context context) {
+    public synchronized static List<File> getVoicesWithDirs(Context context) {
         // Control:
         HomeActivity.setVoicesObserver(false);
         // Initializing:

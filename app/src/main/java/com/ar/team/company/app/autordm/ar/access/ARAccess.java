@@ -22,7 +22,7 @@ public class ARAccess {
     // MainFields:
     public static Map<String, File> MAIN_FILE_MAP;
     // Fields(Root):
-    public static final String ROOT_DIR = "SocialDelete App";
+    public static final String ROOT_DIR = "AutoRDM App";
     // Fields(SubRoot):
     public static final String IMAGES_DIR = ROOT_DIR + " Images";
     public static final String VIDEOS_DIR = ROOT_DIR + " Videos";
@@ -218,5 +218,4 @@ public class ARAccess {
         // Debugging:
         Log.d(TAG, "A11-OP: Files Copied Successfully");
     }
-
 }

@@ -29,7 +29,7 @@ public class ARImagesAccess {
     }
 
     // Method(Static):
-    public static List<File> getImagesWithDirs(Context context) {
+    public synchronized static List<File> getImagesWithDirs(Context context) {
         // Control:
         HomeActivity.setImagesObserver(false);
         // Initializing:
