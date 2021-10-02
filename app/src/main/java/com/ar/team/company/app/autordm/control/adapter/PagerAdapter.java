@@ -1,11 +1,14 @@
 package com.ar.team.company.app.autordm.control.adapter;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ui.fragment.home.ChatFragment;
 import com.ar.team.company.app.autordm.ui.fragment.home.MediaFragment;
 
@@ -18,12 +21,14 @@ import java.util.List;
 public class PagerAdapter extends FragmentStateAdapter {
 
     // Fields:
+    private final Context context;
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> headers = new ArrayList<>();
 
     // Constructor:
-    public PagerAdapter(@NonNull @NotNull FragmentManager fragmentManager, @NonNull @NotNull Lifecycle lifecycle) {
+    public PagerAdapter(@NonNull @NotNull FragmentManager fragmentManager, @NonNull @NotNull Lifecycle lifecycle,Context context) {
         super(fragmentManager, lifecycle);
+        this.context = context;
         // Initializing:
         initData();
     }
@@ -31,8 +36,8 @@ public class PagerAdapter extends FragmentStateAdapter {
     // MainMethods:
     private void initData() {
         // AddingFragments(Content):
-        addData(new ChatFragment(), "Chat");
-        addData(new MediaFragment(), "Media");
+        addData(new ChatFragment(), context.getString(R.string.chat_fragment_name));
+        addData(new MediaFragment(), context.getString(R.string.media_fragment_name));
         //addData(new ImagesFragment(), "Images");
         //addData(new VideosFragment(), "Videos");
         //addData(new VoiceFragment(), "Voice");

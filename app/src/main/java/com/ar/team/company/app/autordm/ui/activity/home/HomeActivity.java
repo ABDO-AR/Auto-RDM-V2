@@ -113,8 +113,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         // Initializing(Dialog):
         dialog = new ProgressDialog(this);
         // Setting(Text):
-        dialog.setTitle("Loading");
-        dialog.setMessage("LoadingObservers");
+        dialog.setTitle(getString(R.string.loading_dialog_name));
+        dialog.setMessage(getString(R.string.loading_dialog_des));
         // ShowDialog:
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
@@ -162,7 +162,7 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         tempThread.interrupt();
     }
 
-    private void initUiThread(){
+    private void initUiThread() {
         // Hiding(Dialog):
         dialog.hide();
         // Init(App):
@@ -213,7 +213,7 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         // Initializing(MEDIATOR):
         mediator = new TabLayoutMediator(binding.mainContentLayout.homeTabLayout, binding.mainContentLayout.homeViewPager, (tab, position) -> tab.setText(adapter.getHeaders(position)));
         // Initializing(FIELDS):
-        adapter = new PagerAdapter(getSupportFragmentManager(), getLifecycle());
+        adapter = new PagerAdapter(getSupportFragmentManager(), getLifecycle(), this);
         // AttachMediator:
         binding.mainContentLayout.homeViewPager.setAdapter(adapter);
         if (!mediator.isAttached()) mediator.attach();
@@ -225,7 +225,7 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String keyName) {
         // Checking:
-        if (keyName.equals(ARPreferencesManager.WHATSAPP_CHATS)){
+        if (keyName.equals(ARPreferencesManager.WHATSAPP_CHATS)) {
             // Initializing(APP):
             initApp();
         }

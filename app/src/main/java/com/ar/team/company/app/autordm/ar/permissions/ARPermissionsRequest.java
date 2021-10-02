@@ -8,6 +8,8 @@ import android.provider.Settings;
 
 import androidx.core.app.NotificationManagerCompat;
 
+import com.ar.team.company.app.autordm.R;
+
 @SuppressWarnings("unused")
 public class ARPermissionsRequest {
 
@@ -64,9 +66,9 @@ public class ARPermissionsRequest {
         AlertDialog dialog;
         // Preparing:
         builder.setCancelable(false);
-        builder.setTitle("Request Notification Access Permission");
-        builder.setMessage("We cannot start this application without notification access click access to enable it.");
-        builder.setPositiveButton("Access", listener);
+        builder.setTitle(context.getString(R.string.request_name));
+        builder.setMessage(context.getString(R.string.request_des));
+        builder.setPositiveButton(context.getString(R.string.request_btn), listener);
         // Refreshing:
         dialog = builder.create();
         // Developing:

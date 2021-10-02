@@ -168,8 +168,8 @@ public class NotificationListener extends NotificationListenerService {
                         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                                 .setSmallIcon(R.drawable.ic_notification_small_icon)
-                                .setContentTitle("AutoRDM")
-                                .setContentText("Message Deleted Was Found")
+                                .setContentTitle(getString(R.string.channel_name))
+                                .setContentText(getString(R.string.channel_description))
                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                 .setContentIntent(pendingIntent)
                                 .setAutoCancel(true);
