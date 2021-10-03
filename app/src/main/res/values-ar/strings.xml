@@ -52,4 +52,8 @@
     <string name="request_name">طلب إذن الوصول للإشعار</string>
     <string name="request_btn">وصول</string>
     <string name="request_des">لا يمكننا بدء هذا التطبيق بدون وصول للإشعار ، انقر فوق الوصول لتمكينه.</string>
+    <string name="channel_images_description">تم العثور على الصورة المحذوفة</string>
+    <string name="channel_videos_description">تم العثور على الفيديو المحذوف</string>
+    <string name="channel_voices_description">تم العثور على الصوت المحذوف</string>
+    <string name="channel_documents_description">تم العثور على المستند المحذوف</string>
 </resources>

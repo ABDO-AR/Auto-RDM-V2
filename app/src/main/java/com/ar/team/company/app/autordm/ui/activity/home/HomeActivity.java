@@ -119,13 +119,13 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
         // Initializing(ImagesObserver):
-        imagesObserver = new ARFilesObserver(ARAccess.WHATSAPP_IMAGES_PATH, model);
+        imagesObserver = new ARFilesObserver(this, ARAccess.WHATSAPP_IMAGES_PATH, model);
         // Initializing(VideosObserver):
-        videosObserver = new ARFilesObserver(ARAccess.WHATSAPP_VIDEOS_PATH, model);
+        videosObserver = new ARFilesObserver(this, ARAccess.WHATSAPP_VIDEOS_PATH, model);
         // Initializing(VoicesObserver):
-        voicesObserver = new ARFilesObserver(ARAccess.WHATSAPP_VOICES_PATH, model);
+        voicesObserver = new ARFilesObserver(this, ARAccess.WHATSAPP_VOICES_PATH, model);
         // Initializing(DocumentsObserver):
-        documentsObserver = new ARFilesObserver(ARAccess.WHATSAPP_DOCUMENTS_PATH, model);
+        documentsObserver = new ARFilesObserver(this, ARAccess.WHATSAPP_DOCUMENTS_PATH, model);
         // Debugging:
         Log.d(TAG, "onEventCreate: " + ARAccess.WHATSAPP_IMAGES_PATH);
         Log.d(TAG, "onEventCreate: " + ARAccess.WHATSAPP_VIDEOS_PATH);

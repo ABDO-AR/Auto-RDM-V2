@@ -162,7 +162,6 @@ public class NotificationListener extends NotificationListenerService {
                         // Creating:
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         createNotificationChannel(notificationManager);
-                        // Preparing:
                         // Create an explicit intent for an Activity in your app
                         Intent intent = new Intent(this, HomeActivity.class);
                         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);

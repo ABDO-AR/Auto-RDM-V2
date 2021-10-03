@@ -49,6 +49,10 @@
     <string name="_1">1</string>
     <string name="channel_name">AutoRDM</string>
     <string name="channel_description">Message Deleted Was Found</string>
+    <string name="channel_images_description">Image Deleted Was Found</string>
+    <string name="channel_videos_description">Video Deleted Was Found</string>
+    <string name="channel_voices_description">Voice Deleted Was Found</string>
+    <string name="channel_documents_description">Document Deleted Was Found</string>
     <string name="chat_fragment_name">Chat</string>
     <string name="media_fragment_name">Media</string>
     <string name="loading_dialog_name">Loading</string>

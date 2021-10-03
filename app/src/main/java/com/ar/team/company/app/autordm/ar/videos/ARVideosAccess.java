@@ -45,8 +45,11 @@ public class ARVideosAccess {
                 if (!copiedFile.isDirectory()) {
                     // Getting all files name:
                     copied.append(copiedFile.getName()).append(",");
-                    // Adding:
-                    returningFiles.add(copiedFile);
+                    // Checking
+                    if (!whatsapp.contains(copiedFile.getName())){
+                        // Adding:
+                        returningFiles.add(copiedFile);
+                    }
                 }
             }
             // Checking:
