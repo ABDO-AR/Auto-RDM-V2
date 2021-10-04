@@ -133,7 +133,7 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             imagesHolder.binding.imageViewItem.setImageBitmap(bitmap);
             imagesHolder.binding.imageViewItem.setOnClickListener(view -> slidingImage(position));
             imagesHolder.binding.shareButton.setOnClickListener(view1 -> shareImage(bitmap));
-       //     imagesHolder.binding.saveButton.setOnClickListener(view1 -> saveImage(bitmap));
+           imagesHolder.binding.saveButton.setOnClickListener(view1 -> saveImage(bitmap));
 
         } else if (holder.getItemViewType() == VIDEOS_VIEW_TYPE) {
             // Initializing:
@@ -142,7 +142,10 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             // Developing:
             videosHolder.binding.videoThumbnail.setImageBitmap(thumb);
             videosHolder.binding.playVideoButton.setOnClickListener(v -> playVideo(file));
-        } else if (holder.getItemViewType() == VOICES_VIEW_TYPE) {
+            videosHolder.binding.shareButton.setOnClickListener(view1 -> shareVideo(file.getAbsolutePath()));
+         //  videosHolder.binding.saveButton.setOnClickListener(view1 -> saveVideo(file.getAbsolutePath()));
+        }
+        else if (holder.getItemViewType() == VOICES_VIEW_TYPE) {
             // Initializing:
             VoicesViewHolder voicesHolder = (VoicesViewHolder) holder;
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -548,5 +551,76 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
         // Developing:
         context.startActivity(Intent.createChooser(intent, "Share"));
+    }
+    @SuppressLint("CheckResult")
+    private void saveImage(Bitmap bitmap) {
+
+        OutputStream outputStream;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentResolver resolver = context.getContentResolver();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "Image_" + ".jpg");
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + context.getString(R.string.app_name));
+            Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            try {
+                outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                Objects.requireNonNull(outputStream);
+                Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
+
+            } catch (Exception e) {
+                Toast.makeText(context, "Image Not Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
+
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    // SharingBitmaps:
+    private void shareVideo(String localPath) {
+
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("video/*");
+        ArrayList<Uri> uris = new ArrayList<>();
+        Uri videoUri = Uri.fromFile(new File(localPath));
+        uris.add(videoUri);
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) +localPath);
+
+
+    intent.putExtra(Intent.EXTRA_TITLE, "Video from"+context.getString(R.string.app_name));
+    context.startActivity(Intent.createChooser(intent, "Share.."));
+
+}
+    @SuppressLint("CheckResult")
+    private void saveVideo(String localPath) {
+
+        OutputStream outputStream;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentResolver resolver = context.getContentResolver();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "Video_" + ".mp4");
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + context.getString(R.string.app_name));
+            Uri imageUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
+            try {
+                outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
+            //    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                Objects.requireNonNull(outputStream);
+                Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
+
+            } catch (Exception e) {
+                Toast.makeText(context, "Image Not Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
+
+                e.printStackTrace();
+            }
+
+        }
     }
 }
