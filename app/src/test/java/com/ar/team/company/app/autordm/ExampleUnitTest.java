@@ -1,4 +1,4 @@
-package com.ar.team.company.app.whatsdelete;
+package com.ar.team.company.app.autordm;
 
 import org.junit.Test;
 

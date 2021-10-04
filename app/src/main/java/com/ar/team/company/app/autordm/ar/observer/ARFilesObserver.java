@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.FileObserver;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
@@ -55,6 +53,7 @@ public class ARFilesObserver extends FileObserver {
     public void onEvent(int event, @Nullable String s) {
         // Debugging:
         Log.d(TAG, "onEvent: " + s);
+        Log.d(TAG, "onEvent: " + event);
         // Checking:
         if (s != null) {
             // Checking:
@@ -86,7 +85,7 @@ public class ARFilesObserver extends FileObserver {
             }
         }
         // Checking:
-        //if (!path.equals(ARAccess.WHATSAPP_VOICES_PATH)) {
+        //i(RemoveMe)f (!path.equals(ARAccess.WHATSAPP_VOICES_PATH)) {
         //} else {
         //    // Checking:
         //    if (tempVoices == 0) {

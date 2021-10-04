@@ -555,7 +555,7 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @SuppressLint("CheckResult")
     private void saveImage(Bitmap bitmap) {
 
-        OutputStream outputStream;
+        OutputStream outputStream = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ContentResolver resolver = context.getContentResolver();
@@ -569,10 +569,14 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 Objects.requireNonNull(outputStream);
                 Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
-
             } catch (Exception e) {
                 Toast.makeText(context, "Image Not Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
 
+                e.printStackTrace();
+            }
+            try {
+                Objects.requireNonNull(outputStream).close();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 

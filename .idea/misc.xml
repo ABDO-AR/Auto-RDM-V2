@@ -1,30 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_settings.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_show_chat.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_show_image.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_show_video.xml" value="0.18059777102330293" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/content_main.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/documents_item_view.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/fragment_chat.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/fragment_media.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/fragment_on_board.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/fragment_splash.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/home_item.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/image_view_item.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/nav_header_main.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/show_chat_item_view_me.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/single_app_item.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/single_chat_item.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/slide_image_view_item.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/video_item_view.xml" value="0.333786231884058" />
-        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/voice_item_view.xml" value="0.333786231884058" />
-      </map>
-    </option>
-  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

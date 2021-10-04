@@ -1,4 +1,4 @@
-package com.ar.team.company.app.whatsdelete;
+package com.ar.team.company.app.autordm;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.ar.team.company.app.whatsdelete", appContext.getPackageName());
+        assertEquals("com.ar.team.company.app.autordm", appContext.getPackageName());
     }
 }
