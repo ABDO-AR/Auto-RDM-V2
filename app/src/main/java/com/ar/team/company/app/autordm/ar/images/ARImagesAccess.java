@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
+import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.access.ARAccess;
+import com.ar.team.company.app.autordm.control.notifications.ARNotificationManager;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeActivity;
 
@@ -79,11 +81,24 @@ public class ARImagesAccess {
                         Log.d(ARAccess.TAG, "A11-OP: ImagesAccess Copy Operation Has Been Started For File :: " + file.getName());
                     }
                 }
-                for (File copiedFile : Objects.requireNonNull(imagesDir.listFiles())){
-                    if (!copiedFile.isDirectory()){
-                        if (!realWhatsApp.toString().contains(copiedFile.getName())) returningFiles.add(copiedFile);
+                // LastChecking:
+                for (File copiedFile : Objects.requireNonNull(imagesDir.listFiles())) {
+                    // Checking:
+                    if (!copiedFile.isDirectory()) {
+                        // Adding:
+                        if (!realWhatsApp.toString().contains(copiedFile.getName())) {
+                            // Adding(RF):
+                            returningFiles.add(copiedFile);
+                            // Removing:
+                            //startDeletingOperation(copiedFile.getName(), ARPreferencesManager.IMAGE_COPIED_FILES, manager);
+                        }
                     }
                 }
+                // Checking for the notification:
+                //if (!manager.getStringPreferences(ARPreferencesManager.IMAGE_COPIED_FILES).contains(realWhatsApp.toString())) {
+                //    // Showing:
+                //    ARNotificationManager.showNotification(context, R.string.channel_images_description, ARNotificationManager.CHANNEL_IMAGES_ID);
+                //}
             }
         } else {
             // Initializing:
@@ -114,6 +129,26 @@ public class ARImagesAccess {
         Log.d(ARAccess.TAG, "A11-OP: ImagesAccess Is Files Empty :: " + returningFiles.isEmpty());
         // Retuning:
         return returningFiles;
+    }
+
+    public static void startDeletingOperation(String s, String key, ARPreferencesManager manager) {
+        String whatsAppFiles = manager.getStringPreferences(key);
+        // Checking:
+        if (whatsAppFiles.contains(s)) {
+            // Splitting:
+            String[] filesNames = whatsAppFiles.split(",");
+            StringBuilder builder = new StringBuilder();
+            // Looping:
+            for (String name : filesNames) {
+                // Checking:
+                if (!name.equals(s)) {
+                    // Adding:
+                    builder.append(name).append(",");
+                }
+            }
+            // Setting new preferences:
+            manager.setStringPreferences(key, builder.toString());
+        }
     }
 
     private static File[] getImagesFiles() {

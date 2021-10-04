@@ -29,11 +29,6 @@ public class ARFilesObserver extends FileObserver {
     private final ARPreferencesManager manager;
     // TempData:
     private static int tempVoices = 0;
-    // Channels:
-    public static final String CHANNEL_IMAGES_ID = "AutoRDMDeletedImagesMessage";
-    public static final String CHANNEL_VIDEOS_ID = "AutoRDMDeletedVideosMessage";
-    public static final String CHANNEL_VOICES_ID = "AutoRDMDeletedVoicesMessage";
-    public static final String CHANNEL_DOCUMENTS_ID = "AutoRDMDeletedDocumentsMessage";
     // Fields(Debugging):
     private static final String TAG = "ARFilesObserver";
 
@@ -98,61 +93,6 @@ public class ARFilesObserver extends FileObserver {
         //        tempVoices++;
         //    }
         //}
-    }
-
-    private void startDeletingOperation(String s, String key) {
-        String whatsAppFiles = manager.getStringPreferences(key);
-        // Checking:
-        if (whatsAppFiles.contains(s)) {
-            // Splitting:
-            String[] filesNames = whatsAppFiles.split(",");
-            StringBuilder builder = new StringBuilder();
-            // Looping:
-            for (String name : filesNames) {
-                // Checking:
-                if (!name.equals(s)) {
-                    // Adding:
-                    builder.append(name).append(",");
-                }
-            }
-            // Setting new preferences:
-            manager.setStringPreferences(key, builder.toString());
-        }
-    }
-
-    // Method(ShowNotification)
-    private void showNotification(@StringRes int channelDes, String id) {
-        // Creating:
-        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-        createNotificationChannel(notificationManager, channelDes, id);
-        // Create an explicit intent for an Activity in your app
-        Intent intent = new Intent(context, HomeActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, id)
-                .setSmallIcon(R.drawable.ic_notification_small_icon)
-                .setContentTitle(context.getString(R.string.channel_name))
-                .setContentText(context.getString(channelDes))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-        // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(881231, builder.build());
-    }
-
-    // Method(Notification):
-    private void createNotificationChannel(NotificationManager notificationManager, @StringRes int channelDes, String id) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = context.getString(R.string.channel_name);
-            String description = context.getString(channelDes);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(id, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
     // Methods(Reset):

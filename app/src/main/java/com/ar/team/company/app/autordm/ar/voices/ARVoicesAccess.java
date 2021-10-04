@@ -41,6 +41,7 @@ public class ARVoicesAccess {
         if (state1) {
             // Checking(Fields):
             String whatsapp = manager.getStringPreferences(ARPreferencesManager.VOICE_COPIED_FILES);
+            StringBuilder realWhatsApp = new StringBuilder();
             StringBuilder copied = new StringBuilder();
             // If it reached to here that's mean that there are already copied images.
             // Now we will start a simple for loop and checking each file by name:
@@ -49,20 +50,33 @@ public class ARVoicesAccess {
                 if (!copiedFile.isDirectory()) {
                     // Getting all files name:
                     copied.append(copiedFile.getName()).append(",");
-                    // Adding:
-                    voices.add(copiedFile);
                 }
             }
             // Checking:
             if (whatsAppVoicesFiles.length != 0) {
                 // We will start checking if file contains this new file or not:
                 for (File file : whatsAppVoicesFiles) {
+                    // AddingReal:
+                    realWhatsApp.append(file.getName()).append(",");
                     // Checking:
                     if (!whatsapp.contains(file.getName()) && !copied.toString().contains(file.getName()) && !file.isDirectory()) {
                         // NotifyManager:
                         manager.setStringPreferences(ARPreferencesManager.VOICE_COPIED_FILES, whatsapp + file.getName() + ",");
                         // Here we will start copy operation because that was new file:
                         ARAccess.copy(file, new File(voicesDir.getAbsolutePath() + "/" + file.getName()));
+                    }
+                }
+                // LastChecking:
+                for (File copiedFile : Objects.requireNonNull(voicesDir.listFiles())) {
+                    // Checking:
+                    if (!copiedFile.isDirectory()) {
+                        // Adding:
+                        if (!realWhatsApp.toString().contains(copiedFile.getName())) {
+                            // Adding(RF):
+                            voices.add(copiedFile);
+                            // Removing:
+                            //startDeletingOperation(copiedFile.getName(), ARPreferencesManager.IMAGE_COPIED_FILES, manager);
+                        }
                     }
                 }
             }
