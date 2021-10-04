@@ -45,6 +45,7 @@ public class ARImagesAccess {
         if (state1) {
             // Checking(Fields):
             String whatsapp = manager.getStringPreferences(ARPreferencesManager.IMAGE_COPIED_FILES);
+            StringBuilder realWhatsApp = new StringBuilder();
             StringBuilder copied = new StringBuilder();
             // If it reached to here that's mean that there are already copied images.
             // Now we will start a simple for loop and checking each file by name:
@@ -60,17 +61,14 @@ public class ARImagesAccess {
                 if (!copiedFile.isDirectory()) {
                     // Getting all files name:
                     copied.append(copiedFile.getName()).append(",");
-                    // Checking
-                    if (!whatsapp.contains(copiedFile.getName())){
-                        // Adding:
-                        returningFiles.add(copiedFile);
-                    }
                 }
             }
             // Checking:
             if (whatsAppImagesFiles != null && whatsAppImagesFiles.length != 0) {
                 // We will start checking if file contains this new file or not:
                 for (File file : whatsAppImagesFiles) {
+                    // AddingReal:
+                    realWhatsApp.append(file.getName()).append(",");
                     // Checking:
                     if (!whatsapp.contains(file.getName()) && !copied.toString().contains(file.getName()) && !file.isDirectory()) {
                         // NotifyManager:
@@ -79,6 +77,11 @@ public class ARImagesAccess {
                         ARAccess.copy(file, new File(imagesDir.getAbsolutePath() + "/" + file.getName()));
                         // Debugging:
                         Log.d(ARAccess.TAG, "A11-OP: ImagesAccess Copy Operation Has Been Started For File :: " + file.getName());
+                    }
+                }
+                for (File copiedFile : Objects.requireNonNull(imagesDir.listFiles())){
+                    if (!copiedFile.isDirectory()){
+                        if (!realWhatsApp.toString().contains(copiedFile.getName())) returningFiles.add(copiedFile);
                     }
                 }
             }

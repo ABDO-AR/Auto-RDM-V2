@@ -62,27 +62,28 @@ public class ARFilesObserver extends FileObserver {
                 Log.d(TAG, "onEvent-S-Create: " + s);
                 // StartOperations:
                 model.startMediaOperations();
-            } else if (event == FileObserver.DELETE && s.length() > 4) {
-                // Debugging:
-                Log.d(TAG, "onEvent-S-Delete: " + s);
-                // Checking:
-                if (path.equals(ARAccess.WHATSAPP_IMAGES_PATH)) {
-                    // Showing:
-                    showNotification(R.string.channel_images_description, CHANNEL_IMAGES_ID);
-                    // Start deleting operation from preferences:
-                    startDeletingOperation(s, ARPreferencesManager.IMAGE_COPIED_FILES);
-                } else if (path.equals(ARAccess.WHATSAPP_VIDEOS_PATH)) {
-                    // Showing:
-                    showNotification(R.string.channel_videos_description, CHANNEL_VIDEOS_ID);
-                    // Start deleting operation from preferences:
-                    startDeletingOperation(s, ARPreferencesManager.VIDEO_COPIED_FILES);
-                } else if (path.equals(ARAccess.WHATSAPP_DOCUMENTS_PATH)) {
-                    // Showing:
-                    showNotification(R.string.channel_documents_description, CHANNEL_DOCUMENTS_ID);
-                    // Start deleting operation from preferences:
-                    startDeletingOperation(s, ARPreferencesManager.DOCUMENTS_COPIED_FILES);
-                } else showNotification(R.string.channel_voices_description, CHANNEL_VOICES_ID);
             }
+            //else if (event == FileObserver.DELETE && s.length() > 4) {
+            //    // Debugging:
+            //    Log.d(TAG, "onEvent-S-Delete: " + s);
+            //    // Checking:
+            //    if (path.equals(ARAccess.WHATSAPP_IMAGES_PATH)) {
+            //        // Showing:
+            //        showNotification(R.string.channel_images_description, CHANNEL_IMAGES_ID);
+            //        // Start deleting operation from preferences:
+            //        startDeletingOperation(s, ARPreferencesManager.IMAGE_COPIED_FILES);
+            //    } else if (path.equals(ARAccess.WHATSAPP_VIDEOS_PATH)) {
+            //        // Showing:
+            //        showNotification(R.string.channel_videos_description, CHANNEL_VIDEOS_ID);
+            //        // Start deleting operation from preferences:
+            //        startDeletingOperation(s, ARPreferencesManager.VIDEO_COPIED_FILES);
+            //    } else if (path.equals(ARAccess.WHATSAPP_DOCUMENTS_PATH)) {
+            //        // Showing:
+            //        showNotification(R.string.channel_documents_description, CHANNEL_DOCUMENTS_ID);
+            //        // Start deleting operation from preferences:
+            //        startDeletingOperation(s, ARPreferencesManager.DOCUMENTS_COPIED_FILES);
+            //    } else showNotification(R.string.channel_voices_description, CHANNEL_VOICES_ID);
+            //}
         }
         // Checking:
         //i(RemoveMe)f (!path.equals(ARAccess.WHATSAPP_VOICES_PATH)) {
