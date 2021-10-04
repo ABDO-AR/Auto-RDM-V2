@@ -57,6 +57,8 @@ public class ShowImageActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             binding.imagesSizeTextView.setText((position + 1) + "/" + bitmaps.size());
             binding.shareButton.setOnClickListener(view1 -> sharePalette(bitmaps.get(position)));
+
+
             super.onPageSelected(position);
         }
     }

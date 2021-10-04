@@ -1,5 +1,8 @@
 package com.ar.team.company.app.autordm.control.adapter;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,6 +10,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -14,11 +18,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.animation.content.Content;
 import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.images.ARImagesAccess;
 import com.ar.team.company.app.autordm.databinding.DocumentsItemViewBinding;
@@ -33,12 +39,20 @@ import com.ar.team.company.app.autordm.ui.activity.show.video.ShowVideoActivity;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import es.dmoral.toasty.Toasty;
 
 @SuppressWarnings("unused")
 public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -118,6 +132,9 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             // Developing:
             imagesHolder.binding.imageViewItem.setImageBitmap(bitmap);
             imagesHolder.binding.imageViewItem.setOnClickListener(view -> slidingImage(position));
+            imagesHolder.binding.shareButton.setOnClickListener(view1 -> shareImage(bitmap));
+       //     imagesHolder.binding.saveButton.setOnClickListener(view1 -> saveImage(bitmap));
+
         } else if (holder.getItemViewType() == VIDEOS_VIEW_TYPE) {
             // Initializing:
             VideosViewHolder videosHolder = (VideosViewHolder) holder;
@@ -177,8 +194,12 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             documentsHolder.binding.fileSizeTextView.setText(document.getDocSize());
             documentsHolder.binding.lastFileNameTextView.setText(document.getLastDocName());
             documentsHolder.binding.fileExtensionTextView.setTextColor(document.getDocColor());
+
+
         }
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
@@ -514,5 +535,18 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public MediaPlayer getPlayer() {
         return player;
+    }
+
+    // SharingBitmaps:
+    private void shareImage(Bitmap bitmap) {
+        // Initializing:
+        String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "palette", "share palette");
+        Uri bitmapUri = Uri.parse(bitmapPath);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        // Preparing:
+        intent.setType("image/png");
+        intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+        // Developing:
+        context.startActivity(Intent.createChooser(intent, "Share"));
     }
 }
