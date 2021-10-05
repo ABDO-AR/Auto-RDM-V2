@@ -1,18 +1,25 @@
 package com.ar.team.company.app.autordm.control.adapter;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +28,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +46,9 @@ import com.ar.team.company.app.autordm.ui.activity.show.video.ShowVideoActivity;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -132,8 +142,8 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             // Developing:
             imagesHolder.binding.imageViewItem.setImageBitmap(bitmap);
             imagesHolder.binding.imageViewItem.setOnClickListener(view -> slidingImage(position));
-            imagesHolder.binding.shareButton.setOnClickListener(view1 -> shareImage(bitmap));
-           imagesHolder.binding.saveButton.setOnClickListener(view1 -> saveImage(bitmap));
+            imagesHolder.binding.shareButton.setOnClickListener(view1 -> shareImage(bitmap,file));
+            imagesHolder.binding.saveButton.setOnClickListener(view1 -> saveImage(bitmap,file));
 
         } else if (holder.getItemViewType() == VIDEOS_VIEW_TYPE) {
             // Initializing:
@@ -142,10 +152,9 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             // Developing:
             videosHolder.binding.videoThumbnail.setImageBitmap(thumb);
             videosHolder.binding.playVideoButton.setOnClickListener(v -> playVideo(file));
-            videosHolder.binding.shareButton.setOnClickListener(view1 -> shareVideo(file.getAbsolutePath()));
-         //  videosHolder.binding.saveButton.setOnClickListener(view1 -> saveVideo(file.getAbsolutePath()));
-        }
-        else if (holder.getItemViewType() == VOICES_VIEW_TYPE) {
+            videosHolder.binding.shareButton.setOnClickListener(view1 -> shareVideo(file));
+            videosHolder.binding.saveButton.setOnClickListener(view1 -> saveVideo(file.getAbsolutePath(),file));
+        } else if (holder.getItemViewType() == VOICES_VIEW_TYPE) {
             // Initializing:
             VoicesViewHolder voicesHolder = (VoicesViewHolder) holder;
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -201,7 +210,6 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         }
     }
-
 
 
     @Override
@@ -541,23 +549,82 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     // SharingBitmaps:
-    private void shareImage(Bitmap bitmap) {
+    private void shareImage(Bitmap bitmap,File file) {
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
+            return;
+        }
+
         Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
 
-        // Initializing:
-        String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "palette", "share palette");
-        Uri bitmapUri = Uri.parse(bitmapPath);
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        // Preparing:
-        intent.setType("image/png");
-        intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
-        // Developing:
-        context.startActivity(Intent.createChooser(intent, "Share"));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        {
+
+            Intent intent = new Intent();
+
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + " Sharing ...");
+            intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+            intent.setType("image/*");
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+
+            Uri imageUri =Uri.parse(file.getAbsolutePath());
+            ArrayList<Uri> uris = new ArrayList<>();
+            uris.add(imageUri);
+
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+            context.startActivity(Intent.createChooser(intent , "Share..."));
+        }
+        else
+        {
+            Intent intent = new Intent();
+
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + " Sharing ...");
+            intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+            intent.setType("image/*");
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+
+            Uri imageUri =Uri.parse(file.getAbsolutePath());
+            ArrayList<Uri> uris = new ArrayList<>();
+            uris.add(imageUri);
+
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+            context.startActivity(Intent.createChooser(intent , "Share..."));
+
+        }
+
+
     }
+
     @SuppressLint("CheckResult")
-    private void saveImage(Bitmap bitmap) {
+    private void saveImage(Bitmap bitmap,File file) {
+
 
         OutputStream outputStream = null;
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 55);
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
+            return;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ContentResolver resolver = context.getContentResolver();
@@ -584,57 +651,150 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         }
         else
-        {
-            File filePath = Environment.getExternalStorageDirectory();
-            File dir  = new File(filePath.getAbsolutePath()+"/"+context.getString(R.string.app_name));
-            dir.mkdir();
+            {
 
-            File file1 = new File(dir , System.currentTimeMillis()+".jpg");
+                File filePath = Environment.getExternalStorageDirectory();
+                File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name)+ "/" );
 
-            try {
-                outputStream = new FileOutputStream(file1);
-            } catch (FileNotFoundException e) {
-                Toast.makeText(context, "Image Not   Saved: \n " + e, Toast.LENGTH_SHORT).show();
+                dir.mkdir();
 
-                e.printStackTrace();
-            }
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                File file1 = new File(dir, System.currentTimeMillis() + ".jpg");
 
-            Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
+                try {
+                    outputStream = new FileOutputStream(file1);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 
-            try {
-                outputStream.flush();
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                    Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
+                } catch (FileNotFoundException e) {
+                    Toast.makeText(context, "Image Not   Saved: \n " + e, Toast.LENGTH_SHORT).show();
 
+                    e.printStackTrace();
+                }
+
+
+                try {
+                    outputStream.flush();
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
 
         }
     }
 
     // SharingBitmaps:
-    private void shareVideo(String localPath) {
+    private void shareVideo(File file) {
 
-        Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("video/*");
-        ArrayList<Uri> uris = new ArrayList<>();
-        Uri videoUri = Uri.fromFile(new File(localPath));
-        uris.add(videoUri);
-        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-        intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) +localPath);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        {
 
 
-    intent.putExtra(Intent.EXTRA_TITLE, "Video from"+context.getString(R.string.app_name));
-    context.startActivity(Intent.createChooser(intent, "Share.."));
+        }
+        else
+        {
+            Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("video/*");
+            ArrayList<Uri> uris = new ArrayList<>();
+            Uri videoUri = Uri.fromFile(new File(file.getAbsolutePath()));
+            uris.add(videoUri);
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+            intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + file.getAbsolutePath());
 
-}
+
+            intent.putExtra(Intent.EXTRA_TITLE, "Video from" + context.getString(R.string.app_name));
+            context.startActivity(Intent.createChooser(intent, "Share.."));
+        }
+
+
+
+    }
+
+
+
+
     @SuppressLint("CheckResult")
-    private void saveVideo(String localPath) {
+    private void saveVideo(String localPath , File file2) {
+        Toast.makeText(context, "lo: "+localPath, Toast.LENGTH_LONG).show();
+   /*     Uri uriVideo = Uri.parse(localPath);
+
+
+        File createdvideo = null;
+        ContentResolver resolver = context.getContentResolver();
+        String videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
+        ContentValues valuesvideos;
+        valuesvideos = new ContentValues();
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            valuesvideos.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "Folder");
+            valuesvideos.put(MediaStore.Video.Media.TITLE, videoFileName);
+            valuesvideos.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
+            valuesvideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+            valuesvideos.put(
+                    MediaStore.Video.Media.DATE_ADDED,
+                    System.currentTimeMillis() / 1000);
+
+            Uri collection =
+                    MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+            uriVideo = resolver.insert(collection, valuesvideos);
+        } else {
+            String directory  = Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + File.separator + Environment.DIRECTORY_MOVIES + "/" + "YourFolder";
+            createdvideo = new File(localPath, videoFileName);
+
+            valuesvideos.put(MediaStore.Video.Media.TITLE, videoFileName);
+            valuesvideos.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
+            valuesvideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+            valuesvideos.put(
+                    MediaStore.Video.Media.DATE_ADDED,
+                    System.currentTimeMillis() / 1000);
+            valuesvideos.put(MediaStore.Video.Media.DATA, createdvideo.getAbsolutePath());
+
+            uriVideo = context.getContentResolver().insert(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    valuesvideos);
+        }
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            valuesvideos.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
+            valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 1);
+        }
+
+        ParcelFileDescriptor pfd;
+        try {
+            pfd =context.getContentResolver().openFileDescriptor(uriVideo, "w");
+
+            FileOutputStream out = new FileOutputStream(pfd.getFileDescriptor());
+            // get the already saved video as fileinputstream
+            // The Directory where your file is saved
+            File storageDir = new File(
+                    context.getExternalFilesDir(Environment.DIRECTORY_MOVIES),
+                    "Folder");
+            //Directory and the name of your video file to copy
+            File videoFile = new File(file2, "VID-20211005-WA0002.mp4");
+            FileInputStream in = new FileInputStream(videoFile);
+
+            byte[] buf = new byte[8192];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            out.close();
+            in.close();
+            pfd.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            valuesvideos.clear();
+            valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 0);
+            context.getContentResolver().update(uriVideo, valuesvideos, null, null);
+        }*/
 
         OutputStream outputStream;
 
@@ -643,6 +803,7 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "Video_" + ".mp4");
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+            contentValues.put(MediaStore.Video.Media.DATA, localPath);
             contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + context.getString(R.string.app_name));
             Uri imageUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
             try {
@@ -658,5 +819,42 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
 
         }
+        else
+       {
+            File filePath = Environment.getExternalStorageDirectory();
+      /*       File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name)+ "/" );
+
+            dir.mkdir();
+
+            File file1 = new File(dir, System.currentTimeMillis() + ".mp4");
+
+            try {
+                outputStream = new FileOutputStream(file1);
+
+
+                Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                Toast.makeText(context, "Image Not   Saved: \n " + e, Toast.LENGTH_SHORT).show();
+
+                e.printStackTrace();
+            }
+
+
+            try {
+                outputStream.flush();
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+*/
+        }
     }
+    //check if file exists
+    public static boolean isFileExists(String path) {
+        if (path == null)
+            return false;
+        return new File(path).exists();
+    }
+
+
 }
