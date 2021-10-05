@@ -57,4 +57,6 @@
     <string name="channel_videos_description">تم العثور على الفيديو المحذوف</string>
     <string name="channel_voices_description">تم العثور على الصوت المحذوف</string>
     <string name="channel_documents_description">تم العثور على المستند المحذوف</string>
+    <string name="data_dialog_title">مسح جميع بيانات التطبيق</string>
+    <string name="data_dialog_des">بالنقر فوق نعم ، ستحذف جميع بيانات التطبيق وهذا يشمل:\n \n 1. حذف كل الدردشة \n2. حذف جميع الوسائط</string>
 </resources>

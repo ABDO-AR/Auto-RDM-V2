@@ -60,5 +60,7 @@
     <string name="loading_dialog_des">Loading Observers</string>
     <string name="request_name">Request Notification Access Permission</string>
     <string name="request_btn">Access</string>
+    <string name="data_dialog_title">Clearing all app data</string>
+    <string name="data_dialog_des">By clicking yes you will delete all app data and that\'s include:\n \n1.Deleting all chat  \n2.Deleting all media</string>
     <string name="request_des">We cannot start this application without notification access click access to enable it.</string>
 </resources>

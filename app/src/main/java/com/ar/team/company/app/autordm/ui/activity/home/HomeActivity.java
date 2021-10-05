@@ -217,6 +217,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         // AttachMediator:
         binding.mainContentLayout.homeViewPager.setAdapter(adapter);
         if (!mediator.isAttached()) mediator.attach();
+        // Selecting:
+        openFragment(manager.getIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER));
         // ManagerListener:
         manager.getPreferences().registerOnSharedPreferenceChangeListener(this);
     }
@@ -233,6 +235,11 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
 
     @Override
     protected void onResume() {
+        // Checking:
+        if (mediator != null){
+            // Selecting:
+            openFragment(manager.getIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER));
+        }
         // Initializing(APP):
         initApp();
         // Super:
@@ -262,7 +269,7 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     // Initializing(UserInterface):
     private void initUI() {
         // Setting The New ActionBar:
-        setSupportActionBar(binding.mainContentLayout.toolbar);
+        //setSupportActionBar(binding.mainContentLayout.toolbar);
         // Initializing:
         // GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
         // Developing Nav Drawer:

@@ -76,17 +76,28 @@ public class ARVoicesAccess {
                     if (!copiedFile.isDirectory()) {
                         // Adding:
                         if (!realWhatsApp.toString().contains(copiedFile.getName())) {
+                            // Initializing:
+                            String pref = manager.getStringPreferences(ARPreferencesManager.VOICE_COPIED_FILES);
                             // Adding(RF):
                             voices.add(copiedFile);
                             // Checking:
-                            if (tempDel == 0){
-                                // ShowingNotification:
+                            if (pref.contains(copiedFile.getName())) {
+                                // Start showing notification:
                                 ARNotificationManager.showNotification(context, R.string.channel_voices_description, ARNotificationManager.CHANNEL_VOICES_ID);
-                                // Increment:
-                                tempDel++;
+                                // Start removing operations:
+                                String[] tempPref = pref.split(",");
+                                StringBuilder builder = new StringBuilder();
+                                // Looping:
+                                for (String temp : tempPref) {
+                                    // Checking:
+                                    if (!temp.equals(copiedFile.getName())) {
+                                        // Removing:
+                                        builder.append(temp).append(",");
+                                    }
+                                }
+                                // Resetting:
+                                manager.setStringPreferences(ARPreferencesManager.VOICE_COPIED_FILES, builder.toString());
                             }
-                            // Removing:
-                            //startDeletingOperation(copiedFile.getName(), ARPreferencesManager.IMAGE_COPIED_FILES, manager);
                         }
                     }
                 }

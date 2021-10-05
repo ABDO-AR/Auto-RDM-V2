@@ -142,8 +142,8 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             // Developing:
             imagesHolder.binding.imageViewItem.setImageBitmap(bitmap);
             imagesHolder.binding.imageViewItem.setOnClickListener(view -> slidingImage(position));
-            imagesHolder.binding.shareButton.setOnClickListener(view1 -> shareImage(bitmap,file));
-            imagesHolder.binding.saveButton.setOnClickListener(view1 -> saveImage(bitmap,file));
+            imagesHolder.binding.shareButton.setOnClickListener(view1 -> shareImage(bitmap, file));
+            imagesHolder.binding.saveButton.setOnClickListener(view1 -> saveImage(bitmap, file));
 
         } else if (holder.getItemViewType() == VIDEOS_VIEW_TYPE) {
             // Initializing:
@@ -153,7 +153,7 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             videosHolder.binding.videoThumbnail.setImageBitmap(thumb);
             videosHolder.binding.playVideoButton.setOnClickListener(v -> playVideo(file));
             videosHolder.binding.shareButton.setOnClickListener(view1 -> shareVideo(file));
-            videosHolder.binding.saveButton.setOnClickListener(view1 -> saveVideo(file.getAbsolutePath(),file));
+            videosHolder.binding.saveButton.setOnClickListener(view1 -> saveVideo(file.getAbsolutePath(), file));
         } else if (holder.getItemViewType() == VOICES_VIEW_TYPE) {
             // Initializing:
             VoicesViewHolder voicesHolder = (VoicesViewHolder) holder;
@@ -549,20 +549,18 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     // SharingBitmaps:
-    private void shareImage(Bitmap bitmap,File file) {
+    private void shareImage(Bitmap bitmap, File file) {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
             return;
         }
 
         Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
             Intent intent = new Intent();
 
@@ -570,58 +568,38 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + " Sharing ...");
             intent.setAction(Intent.ACTION_SEND_MULTIPLE);
             intent.setType("image/*");
-
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-
-            Uri imageUri =Uri.parse(file.getAbsolutePath());
+            Uri imageUri = Uri.parse(file.getAbsolutePath());
             ArrayList<Uri> uris = new ArrayList<>();
             uris.add(imageUri);
-
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-            context.startActivity(Intent.createChooser(intent , "Share..."));
-        }
-        else
-        {
+            context.startActivity(Intent.createChooser(intent, "Share..."));
+        } else {
             Intent intent = new Intent();
-
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + " Sharing ...");
             intent.setAction(Intent.ACTION_SEND_MULTIPLE);
             intent.setType("image/*");
-
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-
-            Uri imageUri =Uri.parse(file.getAbsolutePath());
+            Uri imageUri = Uri.parse(file.getAbsolutePath());
             ArrayList<Uri> uris = new ArrayList<>();
             uris.add(imageUri);
-
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-            context.startActivity(Intent.createChooser(intent , "Share..."));
-
+            context.startActivity(Intent.createChooser(intent, "Share..."));
         }
-
-
     }
 
     @SuppressLint("CheckResult")
-    private void saveImage(Bitmap bitmap,File file) {
-
-
+    private void saveImage(Bitmap bitmap, File file) {
         OutputStream outputStream = null;
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 55);
             return;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
             return;
         }
@@ -640,7 +618,6 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(context, "Image Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
-
                 e.printStackTrace();
             }
             try {
@@ -648,51 +625,32 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-        }
-        else
-            {
-
-                File filePath = Environment.getExternalStorageDirectory();
-                File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name)+ "/" );
-
-                dir.mkdir();
-
-                File file1 = new File(dir, System.currentTimeMillis() + ".jpg");
-
-                try {
-                    outputStream = new FileOutputStream(file1);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
-                    Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(context, "Image Not   Saved: \n " + e, Toast.LENGTH_SHORT).show();
-
-                    e.printStackTrace();
-                }
-
-
-                try {
-                    outputStream.flush();
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
+        } else {
+            File filePath = Environment.getExternalStorageDirectory();
+            File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name) + "/");
+            dir.mkdir();
+            File file1 = new File(dir, System.currentTimeMillis() + ".jpg");
+            try {
+                outputStream = new FileOutputStream(file1);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                Toast.makeText(context, "Image Not   Saved: \n " + e, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+            try {
+                outputStream.flush();
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     // SharingBitmaps:
     private void shareVideo(File file) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        {
-
-
-        }
-        else
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        } else {
             Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -703,23 +661,15 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             uris.add(videoUri);
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
             intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + file.getAbsolutePath());
-
-
             intent.putExtra(Intent.EXTRA_TITLE, "Video from" + context.getString(R.string.app_name));
             context.startActivity(Intent.createChooser(intent, "Share.."));
         }
-
-
-
     }
 
-
-
-
     @SuppressLint("CheckResult")
-    private void saveVideo(String localPath , File file2) {
-        Toast.makeText(context, "lo: "+localPath, Toast.LENGTH_LONG).show();
-   /*     Uri uriVideo = Uri.parse(localPath);
+    private void saveVideo(String localPath, File file2) {
+        Toast.makeText(context, "lo: " + localPath, Toast.LENGTH_LONG).show();
+        /*     Uri uriVideo = Uri.parse(localPath);
 
 
         File createdvideo = null;
@@ -789,15 +739,12 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         if (Build.VERSION.SDK_INT >= 29) {
             valuesvideos.clear();
             valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 0);
             context.getContentResolver().update(uriVideo, valuesvideos, null, null);
         }*/
-
         OutputStream outputStream;
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ContentResolver resolver = context.getContentResolver();
             ContentValues contentValues = new ContentValues();
@@ -808,21 +755,16 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Uri imageUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
             try {
                 outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
-            //    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 Objects.requireNonNull(outputStream);
                 Toast.makeText(context, "Video Saved", Toast.LENGTH_SHORT).show();
-
             } catch (Exception e) {
                 Toast.makeText(context, "Video Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
-
                 e.printStackTrace();
             }
-
-        }
-        else
-       {
+        } else {
             File filePath = Environment.getExternalStorageDirectory();
-      /*       File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name)+ "/" );
+            /*       File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name)+ "/" );
 
             dir.mkdir();
 
@@ -849,12 +791,10 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 */
         }
     }
-    //check if file exists
+
+    // Check if file exists
     public static boolean isFileExists(String path) {
-        if (path == null)
-            return false;
+        if (path == null) return false;
         return new File(path).exists();
     }
-
-
 }

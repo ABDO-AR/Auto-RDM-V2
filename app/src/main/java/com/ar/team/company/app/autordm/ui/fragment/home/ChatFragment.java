@@ -62,6 +62,12 @@ public class ChatFragment extends Fragment {
         binding.fabCheckNoti.setOnClickListener(v -> request.reRunNotificationAccess());
     }
 
+    @Override
+    public void onResume() {
+        manager.setIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER, 0);
+        super.onResume();
+    }
+
     // Initializing UserInterface:
     private void initUI() {
         // Initializing:
@@ -83,7 +89,8 @@ public class ChatFragment extends Fragment {
                         // Swap:
                         // Collections.swap(chats, index, 0);
                     }
-                    if (chats.get(index).getSender().equals(ARPreferencesManager.sender)) newChats.add(0, chats.get(index));
+                    if (chats.get(index).getSender().equals(ARPreferencesManager.sender))
+                        newChats.add(0, chats.get(index));
                     else newChats.add(chats.get(index));
                 }
                 // Initializing:
