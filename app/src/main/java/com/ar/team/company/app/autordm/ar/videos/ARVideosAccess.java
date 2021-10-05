@@ -3,7 +3,9 @@ package com.ar.team.company.app.autordm.ar.videos;
 import android.content.Context;
 import android.os.Environment;
 
+import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.access.ARAccess;
+import com.ar.team.company.app.autordm.control.notifications.ARNotificationManager;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeActivity;
 
@@ -62,6 +64,8 @@ public class ARVideosAccess {
                         ARAccess.copy(file, new File(videosDir.getAbsolutePath() + "/" + file.getName()));
                     }
                 }
+                // Temp:
+                int tempDel = 0;
                 // LastChecking:
                 for (File copiedFile : Objects.requireNonNull(videosDir.listFiles())) {
                     // Checking:
@@ -70,6 +74,13 @@ public class ARVideosAccess {
                         if (!realWhatsApp.toString().contains(copiedFile.getName())) {
                             // Adding(RF):
                             returningFiles.add(copiedFile);
+                            // Checking:
+                            if (tempDel == 0){
+                                // ShowingNotification:
+                                ARNotificationManager.showNotification(context, R.string.channel_videos_description, ARNotificationManager.CHANNEL_VIDEOS_ID);
+                                // Increment:
+                                tempDel++;
+                            }
                             // Removing:
                             //startDeletingOperation(copiedFile.getName(), ARPreferencesManager.IMAGE_COPIED_FILES, manager);
                         }

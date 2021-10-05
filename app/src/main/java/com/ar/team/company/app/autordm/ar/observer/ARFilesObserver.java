@@ -52,7 +52,8 @@ public class ARFilesObserver extends FileObserver {
         // Checking:
         if (s != null) {
             // Checking:
-            if (event != FileObserver.DELETE && s.length() > 4) {
+            //event != FileObserver.DELETE &&
+            if (s.length() > 4) {
                 // Debugging:
                 Log.d(TAG, "onEvent-S-Create: " + s);
                 // StartOperations:

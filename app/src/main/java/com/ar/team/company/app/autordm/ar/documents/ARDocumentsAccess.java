@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.access.ARAccess;
+import com.ar.team.company.app.autordm.control.notifications.ARNotificationManager;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.model.Document;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeActivity;
@@ -67,6 +68,8 @@ public class ARDocumentsAccess {
                         ARAccess.copy(file, new File(documentsDir.getAbsolutePath() + "/" + file.getName()));
                     }
                 }
+                // Temp:
+                int tempDel = 0;
                 // LastChecking:
                 for (File copiedFile : Objects.requireNonNull(documentsDir.listFiles())) {
                     // Checking:
@@ -75,6 +78,13 @@ public class ARDocumentsAccess {
                         if (!realWhatsApp.toString().contains(copiedFile.getName())) {
                             // Adding(RF):
                             returningFiles.add(copiedFile);
+                            // Checking:
+                            if (tempDel == 0){
+                                // ShowingNotification:
+                                ARNotificationManager.showNotification(context, R.string.channel_documents_description, ARNotificationManager.CHANNEL_DOCUMENTS_ID);
+                                // Increment:
+                                tempDel++;
+                            }
                             // Removing:
                             //startDeletingOperation(copiedFile.getName(), ARPreferencesManager.IMAGE_COPIED_FILES, manager);
                         }

@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.access.ARAccess;
 import com.ar.team.company.app.autordm.ar.observer.ARFilesObserver;
+import com.ar.team.company.app.autordm.control.notifications.ARNotificationManager;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeActivity;
 
@@ -66,6 +68,8 @@ public class ARVoicesAccess {
                         ARAccess.copy(file, new File(voicesDir.getAbsolutePath() + "/" + file.getName()));
                     }
                 }
+                // Temp:
+                int tempDel = 0;
                 // LastChecking:
                 for (File copiedFile : Objects.requireNonNull(voicesDir.listFiles())) {
                     // Checking:
@@ -74,6 +78,13 @@ public class ARVoicesAccess {
                         if (!realWhatsApp.toString().contains(copiedFile.getName())) {
                             // Adding(RF):
                             voices.add(copiedFile);
+                            // Checking:
+                            if (tempDel == 0){
+                                // ShowingNotification:
+                                ARNotificationManager.showNotification(context, R.string.channel_voices_description, ARNotificationManager.CHANNEL_VOICES_ID);
+                                // Increment:
+                                tempDel++;
+                            }
                             // Removing:
                             //startDeletingOperation(copiedFile.getName(), ARPreferencesManager.IMAGE_COPIED_FILES, manager);
                         }

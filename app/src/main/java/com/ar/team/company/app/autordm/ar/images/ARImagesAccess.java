@@ -81,6 +81,8 @@ public class ARImagesAccess {
                         Log.d(ARAccess.TAG, "A11-OP: ImagesAccess Copy Operation Has Been Started For File :: " + file.getName());
                     }
                 }
+                // Temp:
+                int tempDel = 0;
                 // LastChecking:
                 for (File copiedFile : Objects.requireNonNull(imagesDir.listFiles())) {
                     // Checking:
@@ -89,16 +91,16 @@ public class ARImagesAccess {
                         if (!realWhatsApp.toString().contains(copiedFile.getName())) {
                             // Adding(RF):
                             returningFiles.add(copiedFile);
-                            // Removing:
-                            //startDeletingOperation(copiedFile.getName(), ARPreferencesManager.IMAGE_COPIED_FILES, manager);
+                            // Checking:
+                            if (tempDel == 0){
+                                // ShowingNotification:
+                                ARNotificationManager.showNotification(context, R.string.channel_images_description, ARNotificationManager.CHANNEL_IMAGES_ID);
+                                // Increment:
+                                tempDel++;
+                            }
                         }
                     }
                 }
-                // Checking for the notification:
-                //if (!manager.getStringPreferences(ARPreferencesManager.IMAGE_COPIED_FILES).contains(realWhatsApp.toString())) {
-                //    // Showing:
-                //    ARNotificationManager.showNotification(context, R.string.channel_images_description, ARNotificationManager.CHANNEL_IMAGES_ID);
-                //}
             }
         } else {
             // Initializing:
@@ -129,26 +131,6 @@ public class ARImagesAccess {
         Log.d(ARAccess.TAG, "A11-OP: ImagesAccess Is Files Empty :: " + returningFiles.isEmpty());
         // Retuning:
         return returningFiles;
-    }
-
-    public static void startDeletingOperation(String s, String key, ARPreferencesManager manager) {
-        String whatsAppFiles = manager.getStringPreferences(key);
-        // Checking:
-        if (whatsAppFiles.contains(s)) {
-            // Splitting:
-            String[] filesNames = whatsAppFiles.split(",");
-            StringBuilder builder = new StringBuilder();
-            // Looping:
-            for (String name : filesNames) {
-                // Checking:
-                if (!name.equals(s)) {
-                    // Adding:
-                    builder.append(name).append(",");
-                }
-            }
-            // Setting new preferences:
-            manager.setStringPreferences(key, builder.toString());
-        }
     }
 
     private static File[] getImagesFiles() {
