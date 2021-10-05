@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ar.team.company.app.autordm.control.adapter.MediaAdapter;
 import com.ar.team.company.app.autordm.databinding.FragmentMediaBinding;
@@ -56,6 +57,7 @@ public class MediaFragment extends Fragment {
         // Loading:
         isLoading(true);
         // Initializing:
+
         adapter = new MediaAdapter(requireContext(), media);
         // Preparing(RecyclerView):
         binding.mediaRecyclerView.setAdapter(adapter);

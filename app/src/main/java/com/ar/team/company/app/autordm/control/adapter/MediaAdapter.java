@@ -542,6 +542,8 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     // SharingBitmaps:
     private void shareImage(Bitmap bitmap) {
+        Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
+
         // Initializing:
         String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "palette", "share palette");
         Uri bitmapUri = Uri.parse(bitmapPath);
@@ -570,7 +572,7 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Objects.requireNonNull(outputStream);
                 Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                Toast.makeText(context, "Image Not Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Image Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
 
                 e.printStackTrace();
             }
@@ -581,11 +583,41 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
 
         }
+        else
+        {
+            File filePath = Environment.getExternalStorageDirectory();
+            File dir  = new File(filePath.getAbsolutePath()+"/"+context.getString(R.string.app_name));
+            dir.mkdir();
+
+            File file1 = new File(dir , System.currentTimeMillis()+".jpg");
+
+            try {
+                outputStream = new FileOutputStream(file1);
+            } catch (FileNotFoundException e) {
+                Toast.makeText(context, "Image Not   Saved: \n " + e, Toast.LENGTH_SHORT).show();
+
+                e.printStackTrace();
+            }
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+            Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
+
+            try {
+                outputStream.flush();
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
     }
 
     // SharingBitmaps:
     private void shareVideo(String localPath) {
 
+        Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setAction(Intent.ACTION_SEND);
@@ -617,10 +649,10 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
             //    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 Objects.requireNonNull(outputStream);
-                Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Video Saved", Toast.LENGTH_SHORT).show();
 
             } catch (Exception e) {
-                Toast.makeText(context, "Image Not Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Video Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
 
                 e.printStackTrace();
             }
