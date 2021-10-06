@@ -2,6 +2,7 @@ package com.ar.team.company.app.autordm.ui.fragment.home;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -26,11 +27,14 @@ import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.databinding.FragmentMediaBinding;
 import com.ar.team.company.app.autordm.model.ARMedia;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeViewModel;
+import com.ar.team.company.app.autordm.ui.interfaces.RemoveListener;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -39,6 +43,8 @@ public class MediaFragment extends Fragment {
     // This for control the Fragment-Layout views:
     private FragmentMediaBinding binding;
     private HomeViewModel model; // MainModel for our fragment.
+    // Manager:
+    private ARPreferencesManager manager;
     // Adapter:
     private MediaAdapter adapter;
     // TAGS:
@@ -57,6 +63,7 @@ public class MediaFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Initializing:
         model = new ViewModelProvider(this).get(HomeViewModel.class);
+        manager = new ARPreferencesManager(requireContext());
         // StartOperations:
         model.startMediaOperations();
         // Observing:
@@ -66,18 +73,45 @@ public class MediaFragment extends Fragment {
     }
 
     // Clearing all data:
+    @SuppressLint("NotifyDataSetChanged")
     private void clearAppData(View view) {
+        // Checking:
+        if (adapter != null) {
+            // Initializing:
+            List<File> files = adapter.getMedia().getContent();
+            // Lopping:
+            for (File file : files) {
+                // Checking:
+                if (!manager.getStringPreferences(ARPreferencesManager.REMOVING_FILES_PREF).contains(file.getName())){
+                    // Removing:
+                    manager.setStringPreferences(ARPreferencesManager.REMOVING_FILES_PREF, manager.getStringPreferences(ARPreferencesManager.REMOVING_FILES_PREF) + file.getName() + ",");
+                }
+            }
+            // Initializing(Temp):
+            List<File> tempFiles = new ArrayList<>();
+            String removedFiles = manager.getStringPreferences(ARPreferencesManager.REMOVING_FILES_PREF);
+            // Looping:
+            for (File file : files) {
+                // Checking:
+                if (!removedFiles.contains(file.getName())) tempFiles.add(file);
+            }
+            // Resetting:
+            adapter.getMedia().getContent().clear();
+            adapter.getMedia().getContent().addAll(tempFiles);
+            // Notify
+            adapter.notifyDataSetChanged();
+        }
         // Initializing:
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        //AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         // Setting:
-        builder.setTitle(getString(R.string.data_dialog_title));
-        builder.setMessage(getString(R.string.data_dialog_des));
-        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        //builder.setTitle(getString(R.string.data_dialog_title));
+        //builder.setMessage(getString(R.string.data_dialog_des));
+        //builder.setIcon(android.R.drawable.ic_dialog_alert);
         // Developing:
-        builder.setPositiveButton(android.R.string.yes, (dialog, which) -> ((ActivityManager) requireActivity().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData());
-        builder.setNegativeButton(android.R.string.no, null);
+        //builder.setPositiveButton(android.R.string.yes, (dialog, which) -> ((ActivityManager) requireActivity().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData());
+        //builder.setNegativeButton(android.R.string.no, null);
         // Showing:
-        builder.show();
+        //builder.show();
     }
 
     // OnMediaChange:

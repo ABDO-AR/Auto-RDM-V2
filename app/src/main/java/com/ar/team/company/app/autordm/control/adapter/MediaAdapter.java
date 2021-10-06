@@ -9,17 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.os.Handler;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,9 +28,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.airbnb.lottie.animation.content.Content;
 import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.images.ARImagesAccess;
+import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.databinding.DocumentsItemViewBinding;
 import com.ar.team.company.app.autordm.databinding.ImageViewItemBinding;
 import com.ar.team.company.app.autordm.databinding.VideoItemViewBinding;
@@ -48,13 +44,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,14 +55,13 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import es.dmoral.toasty.Toasty;
-
 @SuppressWarnings("unused")
 public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // Fields:
     private final Context context;
     private final ARMedia media;
+    private final ARPreferencesManager manager;
     // Fields(MediaPlayer):
     private MediaPlayer player;
     private Handler seekHandler = new Handler();
@@ -84,13 +76,15 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private static final int VOICES_VIEW_TYPE = 2;
     private static final int DOCUMENTS_VIEW_TYPE = 3;
     // TAGS:
-    private static final String TAG = "MediaAdapter";
+    public static final String TAG = "MediaAdapter";
 
     // Constructor:
+    @SuppressLint("NotifyDataSetChanged")
     public MediaAdapter(Context context, ARMedia media) {
         // Initializing:
         this.context = context;
         this.media = media;
+        this.manager = new ARPreferencesManager(context);
         this.player = new MediaPlayer();
         // Notify:
         notifyDataSetChanged();
@@ -206,8 +200,6 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             documentsHolder.binding.fileSizeTextView.setText(document.getDocSize());
             documentsHolder.binding.lastFileNameTextView.setText(document.getLastDocName());
             documentsHolder.binding.fileExtensionTextView.setTextColor(document.getDocColor());
-
-
         }
     }
 

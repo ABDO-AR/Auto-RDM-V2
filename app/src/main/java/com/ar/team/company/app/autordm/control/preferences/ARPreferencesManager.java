@@ -30,6 +30,9 @@ public class ARPreferencesManager {
     public static final String STATUS_COPIED_FILES = "ar.Shared.Preferences.Files.Status.Name.Read";
     public static final String DOCUMENTS_COPIED_FILES = "ar.Shared.Preferences.Files.Documents.Name.Read";
     //public static final String FRAGMENT_STATE_NUMBER = "ar.Shared.Preferences.Activity.50.Fragment.State.Number";
+    // Remove:
+    public static final String REMOVING_FILES_PREF = "ar.Shared.Preferences.Remove.Current.files.removed";
+    public static final String CURRENT_MODIFIER = "ar.Shared.Preferences.Remove.Current.last.modifier";
     // Mode:
     public static final int MODE_CHAT = 0;
     public static final int MODE_FILES = 1;
@@ -96,6 +99,19 @@ public class ARPreferencesManager {
         }
     }
 
+    public void setLongPreferences(String key, long value) {
+        // Checking:
+        if (currentMode == MODE_CHAT){
+            // Developing:
+            editor.putLong(key, value);
+            editor.apply();
+        }else if (currentMode == MODE_FILES){
+            // Developing:
+            filesEditor.putLong(key, value);
+            filesEditor.apply();
+        }
+    }
+
     public void setBooleanPreferences(String key, Boolean value) {
         // Checking:
         if (currentMode == MODE_CHAT){
@@ -130,6 +146,16 @@ public class ARPreferencesManager {
         // Checking:
         if (currentMode == MODE_CHAT) value = preferences.getInt(key, 0);
         else if (currentMode == MODE_FILES) value = filesPreferences.getInt(key, 0);
+        // Retuning:
+        return value;
+    }
+
+    public long getLongPreferences(String key) {
+        // Initializing:
+        long value = 0;
+        // Checking:
+        if (currentMode == MODE_CHAT) value = preferences.getLong(key, 0);
+        else if (currentMode == MODE_FILES) value = filesPreferences.getLong(key, 0);
         // Retuning:
         return value;
     }

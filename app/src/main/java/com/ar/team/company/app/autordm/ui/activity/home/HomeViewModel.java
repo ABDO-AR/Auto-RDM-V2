@@ -1,6 +1,7 @@
 package com.ar.team.company.app.autordm.ui.activity.home;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -11,6 +12,8 @@ import com.ar.team.company.app.autordm.ar.documents.ARDocumentsAccess;
 import com.ar.team.company.app.autordm.ar.images.ARImagesAccess;
 import com.ar.team.company.app.autordm.ar.videos.ARVideosAccess;
 import com.ar.team.company.app.autordm.ar.voices.ARVoicesAccess;
+import com.ar.team.company.app.autordm.control.adapter.MediaAdapter;
+import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.model.ARMedia;
 
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
@@ -46,6 +49,7 @@ public class HomeViewModel extends AndroidViewModel {
     // Method(Thread):
     private void mediaThread() {
         // Initializing:
+        ARPreferencesManager manager = new ARPreferencesManager(getApplication().getApplicationContext());
         List<File> images = ARImagesAccess.getImagesWithDirs(getApplication().getApplicationContext());
         List<File> videos = ARVideosAccess.getVideosWithDirs(getApplication().getApplicationContext());
         List<File> voices = ARVoicesAccess.getVoicesWithDirs(getApplication().getApplicationContext());
@@ -62,9 +66,23 @@ public class HomeViewModel extends AndroidViewModel {
         // Sorting:
         Arrays.sort(sortingContent, LastModifiedFileComparator.LASTMODIFIED_REVERSE);
         // Resetting(Content):
-        content = Arrays.asList(sortingContent);
+        content.clear();
+        content.addAll(Arrays.asList(sortingContent));
         // Initializing(Returning-Filed):
         ARMedia media = new ARMedia(content);
+        // Initializing(Temp):
+        List<File> temp = new ArrayList<>();
+        String removedFiles = manager.getStringPreferences(ARPreferencesManager.REMOVING_FILES_PREF);
+        // Looping:
+        for (File file : media.getContent()) {
+            // Checking(&Removing):
+            if (!removedFiles.contains(file.getName())) temp.add(file);
+        }
+        // Clearing(&ReAdding):
+        media.getContent().clear();
+        media.getContent().addAll(temp);
+        // Debugging:
+        Log.d(MediaAdapter.TAG, "MediaAdapter: " + removedFiles);
         // Developing:
         mediaMutableData.postValue(media);
     }
