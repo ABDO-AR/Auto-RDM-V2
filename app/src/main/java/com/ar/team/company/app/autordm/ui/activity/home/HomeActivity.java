@@ -208,8 +208,6 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
 
     // InitApp:
     private void initApp() {
-        // Initializing(UI):
-        initUI();
         // Initializing(MEDIATOR):
         mediator = new TabLayoutMediator(binding.mainContentLayout.homeTabLayout, binding.mainContentLayout.homeViewPager, (tab, position) -> tab.setText(adapter.getHeaders(position)));
         // Initializing(FIELDS):
@@ -242,6 +240,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         }
         // Initializing(APP):
         initApp();
+        // Hiding the dialog:
+        if (dialog != null) dialog.hide();
         // Super:
         super.onResume();
     }
@@ -264,16 +264,6 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         if (mediaState) model.getMediaThread().interrupt();
         // Super:
         super.onDestroy();
-    }
-
-    // Initializing(UserInterface):
-    private void initUI() {
-        // Setting The New ActionBar:
-        //setSupportActionBar(binding.mainContentLayout.toolbar);
-        // Initializing:
-        // GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
-        // Developing Nav Drawer:
-        // HomeItemsAdapter homeItemsAdapter = new HomeItemsAdapter(this);
     }
 
     @Override
