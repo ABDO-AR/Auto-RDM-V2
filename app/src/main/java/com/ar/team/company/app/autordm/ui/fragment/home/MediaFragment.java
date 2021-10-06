@@ -75,6 +75,20 @@ public class MediaFragment extends Fragment {
     // Clearing all data:
     @SuppressLint("NotifyDataSetChanged")
     private void clearAppData(View view) {
+        // Initializing:
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        // Setting:
+        builder.setTitle(getString(R.string.data_dialog_title));
+        builder.setMessage(getString(R.string.data_dialog_des));
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        // Developing:
+        builder.setPositiveButton(android.R.string.yes, (dialog, which) -> startDeleteMediaContent());
+        builder.setNegativeButton(android.R.string.no, null);
+        // Showing:
+        builder.show();
+    }
+
+    private void startDeleteMediaContent(){
         // Checking:
         if (adapter != null) {
             // Initializing:
@@ -101,17 +115,6 @@ public class MediaFragment extends Fragment {
             // Notify
             adapter.notifyDataSetChanged();
         }
-        // Initializing:
-        //AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        // Setting:
-        //builder.setTitle(getString(R.string.data_dialog_title));
-        //builder.setMessage(getString(R.string.data_dialog_des));
-        //builder.setIcon(android.R.drawable.ic_dialog_alert);
-        // Developing:
-        //builder.setPositiveButton(android.R.string.yes, (dialog, which) -> ((ActivityManager) requireActivity().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData());
-        //builder.setNegativeButton(android.R.string.no, null);
-        // Showing:
-        //builder.show();
     }
 
     // OnMediaChange:
