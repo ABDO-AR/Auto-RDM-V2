@@ -29,7 +29,7 @@ public class ARPreferencesManager {
     public static final String VOICE_COPIED_FILES = "ar.Shared.Preferences.Files.Voices.Name.Read";
     public static final String STATUS_COPIED_FILES = "ar.Shared.Preferences.Files.Status.Name.Read";
     public static final String DOCUMENTS_COPIED_FILES = "ar.Shared.Preferences.Files.Documents.Name.Read";
-    public static final String FRAGMENT_STATE_NUMBER = "ar.Shared.Preferences.Activity.50.Fragment.State.Number";
+    //public static final String FRAGMENT_STATE_NUMBER = "ar.Shared.Preferences.Activity.50.Fragment.State.Number";
     // Mode:
     public static final int MODE_CHAT = 0;
     public static final int MODE_FILES = 1;

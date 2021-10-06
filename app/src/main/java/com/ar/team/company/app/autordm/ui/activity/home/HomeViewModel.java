@@ -13,10 +13,12 @@ import com.ar.team.company.app.autordm.ar.videos.ARVideosAccess;
 import com.ar.team.company.app.autordm.ar.voices.ARVoicesAccess;
 import com.ar.team.company.app.autordm.model.ARMedia;
 
+import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -34,7 +36,7 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     // Media:
-    public void startMediaOperations(){
+    public void startMediaOperations() {
         // Working:
         mediaThread = new Thread(this::mediaThread);
         // StartWorkingThread:
@@ -55,6 +57,12 @@ public class HomeViewModel extends AndroidViewModel {
         content.addAll(videos);
         content.addAll(voices);
         content.addAll(documents);
+        // Initializing(Sorting):
+        File[] sortingContent = content.toArray(new File[0]);
+        // Sorting:
+        Arrays.sort(sortingContent, LastModifiedFileComparator.LASTMODIFIED_REVERSE);
+        // Resetting(Content):
+        content = Arrays.asList(sortingContent);
         // Initializing(Returning-Filed):
         ARMedia media = new ARMedia(content);
         // Developing:

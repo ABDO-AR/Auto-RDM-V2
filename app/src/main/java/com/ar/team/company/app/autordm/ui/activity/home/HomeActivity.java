@@ -26,10 +26,12 @@ import com.ar.team.company.app.autordm.ar.access.ARAccess;
 import com.ar.team.company.app.autordm.ar.observer.ARFilesObserver;
 import com.ar.team.company.app.autordm.control.adapter.HomeItemsAdapter;
 import com.ar.team.company.app.autordm.control.adapter.PagerAdapter;
+import com.ar.team.company.app.autordm.control.notifications.NotificationListener;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 
 import com.ar.team.company.app.autordm.databinding.ActivityHomeBinding;
 import com.ar.team.company.app.autordm.ui.activity.settings.SettingsActivity;
+import com.ar.team.company.app.autordm.ui.interfaces.ChatListener;
 import com.ar.team.company.app.autordm.ui.interfaces.HomeItemClickListener;
 import com.ar.team.company.app.autordm.ar.utils.ARUtils;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,7 +42,7 @@ import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import java.util.Objects;
 
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class HomeActivity extends AppCompatActivity implements HomeItemClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class HomeActivity extends AppCompatActivity implements HomeItemClickListener, SharedPreferences.OnSharedPreferenceChangeListener, ChatListener {
 
     // This For Control The XML-Main Views:
     private ActivityHomeBinding binding;
@@ -216,9 +218,10 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         binding.mainContentLayout.homeViewPager.setAdapter(adapter);
         if (!mediator.isAttached()) mediator.attach();
         // Selecting:
-        openFragment(manager.getIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER));
+        // openFragment(manager.getIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER));
         // ManagerListener:
         manager.getPreferences().registerOnSharedPreferenceChangeListener(this);
+        NotificationListener.listener = this;
     }
 
     // SharedPreferencesChangeListener:
@@ -232,14 +235,19 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     }
 
     @Override
+    public void onChatUpdate() {
+        initApp();
+    }
+
+    @Override
     protected void onResume() {
         // Checking:
-        if (mediator != null){
-            // Selecting:
-            openFragment(manager.getIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER));
-        }
+        //if (mediator != null){
+        //    // Selecting:
+        //    openFragment(manager.getIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER));
+        //}
         // Initializing(APP):
-        initApp();
+        //initApp();
         // Hiding the dialog:
         if (dialog != null) dialog.hide();
         // Super:
@@ -250,6 +258,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     protected void onStop() {
         // Dismiss:
         dialog.dismiss();
+        // Resetting:
+        NotificationListener.listener = null;
         // UnRegistering:
         manager.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
         // Super:

@@ -39,7 +39,6 @@ public class MediaFragment extends Fragment {
     // This for control the Fragment-Layout views:
     private FragmentMediaBinding binding;
     private HomeViewModel model; // MainModel for our fragment.
-    private ARPreferencesManager manager;
     // Adapter:
     private MediaAdapter adapter;
     // TAGS:
@@ -58,7 +57,6 @@ public class MediaFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Initializing:
         model = new ViewModelProvider(this).get(HomeViewModel.class);
-        manager = new ARPreferencesManager(requireContext());
         // StartOperations:
         model.startMediaOperations();
         // Observing:
@@ -80,12 +78,6 @@ public class MediaFragment extends Fragment {
         builder.setNegativeButton(android.R.string.no, null);
         // Showing:
         builder.show();
-    }
-
-    @Override
-    public void onResume() {
-        manager.setIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER, 1);
-        super.onResume();
     }
 
     // OnMediaChange:

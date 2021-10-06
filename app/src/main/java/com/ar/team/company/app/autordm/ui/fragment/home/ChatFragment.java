@@ -62,12 +62,6 @@ public class ChatFragment extends Fragment {
         binding.fabCheckNoti.setOnClickListener(v -> request.reRunNotificationAccess());
     }
 
-    @Override
-    public void onResume() {
-        manager.setIntegerPreferences(ARPreferencesManager.FRAGMENT_STATE_NUMBER, 0);
-        super.onResume();
-    }
-
     // Initializing UserInterface:
     private void initUI() {
         // Initializing:

@@ -21,6 +21,7 @@ import com.ar.team.company.app.autordm.model.Chat;
 import com.ar.team.company.app.autordm.ar.utils.ARUtils;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeActivity;
 import com.ar.team.company.app.autordm.ui.activity.show.chat.ShowChatActivity;
+import com.ar.team.company.app.autordm.ui.interfaces.ChatListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,6 +36,7 @@ public class NotificationListener extends NotificationListenerService {
     public static final String WHATSAPP_PACKAGE_NAME = "com.whatsapp";
     public static final List<Notification.Action> finalActions = new ArrayList<>();
     public static final List<ARIcon> icons = new ArrayList<>();
+    public static ChatListener listener;
     // Channels:
     public static final String CHANNEL_ID = "AutoRDMDeletedMessage";
     // TAGS:
@@ -175,6 +177,7 @@ public class NotificationListener extends NotificationListenerService {
                         // notificationId is a unique int for each notification that you must define
                         notificationManager.notify(881231, builder.build());
                     }
+                    if (listener != null) listener.onChatUpdate();
                     // Debugging:
                     ARUtils.debug(TAG, NP_FIELD, "Whatsapp Package Was Founded In Preferences");
                     // Debugging:
