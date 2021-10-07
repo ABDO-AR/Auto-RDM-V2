@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -29,6 +30,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ar.team.company.app.autordm.R;
+import com.ar.team.company.app.autordm.ar.access.ARAccess;
 import com.ar.team.company.app.autordm.ar.images.ARImagesAccess;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.databinding.DocumentsItemViewBinding;
@@ -44,10 +46,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -620,7 +626,7 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else {
             File filePath = Environment.getExternalStorageDirectory();
             File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name) + "/");
-            dir.mkdir();
+            if (!dir.exists()) dir.mkdir();
             File file1 = new File(dir, System.currentTimeMillis() + ".jpg");
             try {
                 outputStream = new FileOutputStream(file1);
@@ -642,6 +648,18 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     // SharingBitmaps:
     private void shareVideo(File file) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("video/*");
+            ArrayList<Uri> uris = new ArrayList<>();
+            Uri videoUri = Uri.fromFile(new File(file.getAbsolutePath()));
+            uris.add(videoUri);
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+            intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name) + file.getAbsolutePath());
+            intent.putExtra(Intent.EXTRA_TITLE, "Video from" + context.getString(R.string.app_name));
+            context.startActivity(Intent.createChooser(intent, "Share.."));
         } else {
             Toast.makeText(context, context.getString(R.string.wait), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent();
@@ -660,7 +678,17 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @SuppressLint("CheckResult")
     private void saveVideo(String localPath, File file2) {
-        Toast.makeText(context, "lo: " + localPath, Toast.LENGTH_LONG).show();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 55);
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
+            return;
+        }
+
+        Toast.makeText(context, "Save has been started", Toast.LENGTH_LONG).show();
         /*     Uri uriVideo = Uri.parse(localPath);
 
 
@@ -736,52 +764,85 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 0);
             context.getContentResolver().update(uriVideo, valuesvideos, null, null);
         }*/
-        OutputStream outputStream;
+        OutputStream outputStream = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ContentResolver resolver = context.getContentResolver();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "Video_" + ".mp4");
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
-            contentValues.put(MediaStore.Video.Media.DATA, localPath);
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + context.getString(R.string.app_name));
-            Uri imageUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
-            try {
-                outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
-                //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                Objects.requireNonNull(outputStream);
-                Toast.makeText(context, "Video Saved", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Toast.makeText(context, "Video Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+            File filePath = Environment.getExternalStorageDirectory();
+            File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name) + "/");
+            if (!dir.exists()) {
+                boolean state = dir.mkdir();
+                if (!state){
+                    try {
+                        Files.createDirectory(Paths.get(dir.getAbsolutePath()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+            ARAccess.copy(file2,new File(dir.getAbsolutePath() + "/" + file2.getName()));
+            //ContentResolver resolver = context.getContentResolver();
+            //ContentValues contentValues = new ContentValues();
+            //contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "Video_" + ".mp4");
+            //contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+            //contentValues.put(MediaStore.Video.Media.DATA, localPath);
+            //contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + context.getString(R.string.app_name));
+            //Uri imageUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
+            //try {
+            //    outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
+            //    //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            //    Objects.requireNonNull(outputStream);
+            //    Toast.makeText(context, "Video Saved", Toast.LENGTH_SHORT).show();
+            //} catch (Exception e) {
+            //    Toast.makeText(context, "Video Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
+            //    e.printStackTrace();
+            //}
         } else {
             File filePath = Environment.getExternalStorageDirectory();
-            /*       File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name)+ "/" );
+            File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name) + "/");
+            if (!dir.exists()) dir.mkdir();
+            ARAccess.copy(file2,new File(dir.getAbsolutePath() + "/" + file2.getName()));
+            //File newfile;
+//
+            //try {
+//
+            //    File currentFile = new File(localPath);
+            //    String fileName = currentFile.getName();
+//
+            //    ContextWrapper cw = new ContextWrapper(context);
+            //    File directory = cw.getDir("videoDir", Context.MODE_PRIVATE);
+//
+//
+            //    newfile = new File(directory, fileName);
+//
+            //    if(currentFile.exists()){
+//
+            //        InputStream in = new FileInputStream(currentFile);
+            //        OutputStream out = new FileOutputStream(newfile);
+//
+            //        // Copy the bits from instream to outstream
+            //        byte[] buf = new byte[1024];
+            //        int len;
+//
+            //        while ((len = in.read(buf)) > 0) {
+            //            out.write(buf, 0, len);
+            //        }
+//
+            //        in.close();
+            //        out.close();
+//
+            //        Log.v("", "Video file saved successfully.");
+//
+            //    }else{
+            //        Log.v("", "Video saving failed. Source file missing.");
+            //    }
+//
+//
+//
+            //} catch (Exception e) {
+            //    e.printStackTrace();
+            //}
 
-            dir.mkdir();
-
-            File file1 = new File(dir, System.currentTimeMillis() + ".mp4");
-
-            try {
-                outputStream = new FileOutputStream(file1);
-
-
-                Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show();
-            } catch (FileNotFoundException e) {
-                Toast.makeText(context, "Image Not   Saved: \n " + e, Toast.LENGTH_SHORT).show();
-
-                e.printStackTrace();
-            }
-
-
-            try {
-                outputStream.flush();
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-*/
         }
+        Toast.makeText(context, "Save has been fished successfully", Toast.LENGTH_SHORT).show();
     }
 
     // Check if file exists
