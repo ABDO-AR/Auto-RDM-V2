@@ -248,6 +248,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         //}
         // Initializing(APP):
         //initApp();
+        // Settings:
+        NotificationListener.listener = this;
         // Hiding the dialog:
         if (dialog != null) dialog.hide();
         // Super:
