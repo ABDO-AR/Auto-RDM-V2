@@ -3,14 +3,29 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/arcom/AR/StudioProjects/Auto RDM V2/app/src/main/res/layout/activity_home.xml" value="0.18840579710144928" />
-        <entry key="..\:/Users/arcom/AR/StudioProjects/Auto RDM V2/app/src/main/res/layout/activity_main.xml" value="0.18840579710144928" />
-        <entry key="..\:/Users/arcom/AR/StudioProjects/Auto RDM V2/app/src/main/res/layout/activity_settings.xml" value="0.1393110435663627" />
-        <entry key="..\:/Users/arcom/AR/StudioProjects/Auto RDM V2/app/src/main/res/layout/activity_show_video.xml" value="0.2864583333333333" />
-        <entry key="..\:/Users/arcom/AR/StudioProjects/Auto RDM V2/app/src/main/res/layout/content_main.xml" value="0.264" />
-        <entry key="..\:/Users/arcom/AR/StudioProjects/Auto RDM V2/app/src/main/res/layout/fragment_chat.xml" value="0.2864583333333333" />
-        <entry key="..\:/Users/arcom/AR/StudioProjects/Auto RDM V2/app/src/main/res/layout/fragment_media.xml" value="0.264" />
-        <entry key="..\:/Users/arcom/AR/StudioProjects/Auto RDM V2/app/src/main/res/layout/fragment_splash.xml" value="0.2864583333333333" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_home.xml" value="0.18059777102330293" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_main.xml" value="0.18059777102330293" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_settings.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_show_chat.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/activity_show_video.xml" value="0.18059777102330293" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/content_main.xml" value="0.2" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/documents_item_view.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/fragment_chat.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/fragment_media.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/fragment_on_board.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/fragment_splash.xml" value="0.35688405797101447" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/home_item.xml" value="0.18059777102330293" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/image_view_item.xml" value="0.18059777102330293" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/nav_header_main.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/on_board_item.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/show_chat_item_view.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/show_chat_item_view_me.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/single_app_item.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/single_chat_item.xml" value="0.18059777102330293" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/slide_image_view_item.xml" value="0.18059777102330293" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/text.xml" value="0.37135416666666665" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/video_item_view.xml" value="0.18059777102330293" />
+        <entry key="..\:/Source Code/Big Projects/WhatsDelete/Auto-RDM-V2/app/src/main/res/layout/voice_item_view.xml" value="0.18059777102330293" />
       </map>
     </option>
   </component>

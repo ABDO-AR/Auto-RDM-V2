@@ -9,7 +9,9 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activity.home.HomeActivity">
+    tools:context=".ui.activity.home.HomeActivity"
+    android:background="@color/white"
+    >
 
     <include
         android:id="@+id/main_content_layout"

@@ -10,10 +10,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -24,20 +29,22 @@ import android.widget.Toast;
 import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.access.ARAccess;
 import com.ar.team.company.app.autordm.ar.observer.ARFilesObserver;
-import com.ar.team.company.app.autordm.control.adapter.HomeItemsAdapter;
+
+import com.ar.team.company.app.autordm.ar.permissions.ARPermissionsRequest;
 import com.ar.team.company.app.autordm.control.adapter.PagerAdapter;
 import com.ar.team.company.app.autordm.control.notifications.NotificationListener;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 
 import com.ar.team.company.app.autordm.databinding.ActivityHomeBinding;
-import com.ar.team.company.app.autordm.ui.activity.settings.SettingsActivity;
+
+
 import com.ar.team.company.app.autordm.ui.interfaces.ChatListener;
 import com.ar.team.company.app.autordm.ui.interfaces.HomeItemClickListener;
-import com.ar.team.company.app.autordm.ar.utils.ARUtils;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
+
 
 import java.util.Objects;
 
@@ -62,11 +69,14 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     // Permissions:
     private static final String requestPermName = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final ActivityResultContracts.RequestPermission request = new ActivityResultContracts.RequestPermission();
+    // ARPermissionsRequest:
+    private ARPermissionsRequest arPermissionsRequest;
     private ActivityResultLauncher<String> launcher;
     // TempData:
     private Thread tempThread;
     // TAGS:
     private static final String TAG = "HomeActivity";
+    private static final String perm = Manifest.permission.READ_EXTERNAL_STORAGE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,6 +245,43 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     }
 
     @Override
+    protected void onStart()
+    {
+        // Developing:
+        if (ContextCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_GRANTED) {
+            // Permission already granted:
+        } else if (shouldShowRequestPermissionRationale(perm)) {
+
+            // Initializing:
+            String mes = "We Cannot Start The App Without This Permissions";
+            Snackbar snackbar = Snackbar.make(binding.getRoot(), mes, Snackbar.LENGTH_INDEFINITE);
+            // Developing:
+            snackbar.setAction("ACCESS", view -> launcher.launch(perm));
+            snackbar.show();
+        } else {
+            // Permission not granted so we have to ask it:
+            launcher.launch(perm);
+        }
+
+        arPermissionsRequest = new ARPermissionsRequest(this);
+      arPermissionsRequest.runNotificationAccess();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
+        }
+
+        super.onStart();
+
+    }
+
+    @Override
     public void onChatUpdate() {
         initApp();
     }
@@ -291,9 +338,7 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         // Developing:
         switch (item.getItemId()) {
-            case R.id.menu_setting:
-                ARUtils.runActivity(this, SettingsActivity.class);
-                break;
+
             case R.id.menu_store:
                 Toast.makeText(this, "Store", Toast.LENGTH_SHORT).show();
                 break;
@@ -309,4 +354,6 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         // Developing:
         Objects.requireNonNull(tab).select();
     }
+
+
 }

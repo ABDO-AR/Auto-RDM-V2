@@ -42,7 +42,7 @@
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_12sdp"
-
+        android:backgroundTint="@color/white"
         android:layout_marginBottom="@dimen/_28sdp"
         app:cardCornerRadius="999dp"
         app:cardElevation="10dp"
@@ -68,6 +68,7 @@
         android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginBottom="@dimen/_28sdp"
         app:cardCornerRadius="999dp"
+        android:backgroundTint="@color/white"
         app:cardElevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/card_share_button">

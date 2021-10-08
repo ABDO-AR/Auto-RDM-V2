@@ -29,6 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_details_user_"
         app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="@color/white"
 
 
         >
@@ -39,7 +40,7 @@
             android:paddingBottom="@dimen/_5sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
+            android:backgroundTint="@color/white"
             >
 
             <ImageButton
