@@ -50,6 +50,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,6 +170,7 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             else
                 voicesHolder.binding.playVoiceButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_play));
             // Developing:
+            voicesHolder.binding.shareVoiceButton.setOnClickListener(v -> onVoiceShare(file, position));
             voicesHolder.binding.durationTextView.setText(formatsMilliSeconds(Long.parseLong(duration)));
             voicesHolder.binding.dateTextView.setText(format.format(file.lastModified()));
             voicesHolder.binding.playVoiceButton.setOnClickListener(v -> audioMethod(voicesHolder.binding, position));
@@ -202,6 +205,18 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             documentsHolder.binding.fileSizeTextView.setText(document.getDocSize());
             documentsHolder.binding.lastFileNameTextView.setText(document.getLastDocName());
             documentsHolder.binding.fileExtensionTextView.setTextColor(document.getDocColor());
+        }
+    }
+
+    private void onVoiceShare(File file, int position) {
+        // Checking:
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            String sharePath = file.getAbsolutePath();
+            Uri uri = Uri.parse(sharePath);
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("audio/*");
+            share.putExtra(Intent.EXTRA_STREAM, uri);
+            context.startActivity(Intent.createChooser(share, "Share Sound File"));
         }
     }
 
@@ -665,35 +680,48 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private void saveVideo(String localPath, File file2) {
         Toast.makeText(context, "lo: " + localPath, Toast.LENGTH_LONG).show();
 
-        OutputStream outputStream;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ContentResolver resolver = context.getContentResolver();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "Video_" + ".mp4");
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
-            contentValues.put(MediaStore.Video.Media.DATA, localPath);
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + context.getString(R.string.app_name));
-            Uri imageUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
-            try {
-                outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
-                //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                Objects.requireNonNull(outputStream);
-                Toast.makeText(context, "Video Saved", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Toast.makeText(context, "Video Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 55);
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
+            return;
+        }
+
+        //OutputStream outputStream;
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+            //ContentResolver resolver = context.getContentResolver();
+            //ContentValues contentValues = new ContentValues();
+            //contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "Video_" + ".mp4");
+            //contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+            //contentValues.put(MediaStore.Video.Media.DATA, localPath);
+            //contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + context.getString(R.string.app_name));
+            //Uri imageUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
+            //try {
+            //    outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
+            //    //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            //    Objects.requireNonNull(outputStream);
+            //    Toast.makeText(context, "Video Saved", Toast.LENGTH_SHORT).show();
+            //} catch (Exception e) {
+            //    Toast.makeText(context, "Video Not  Saved: \n " + e, Toast.LENGTH_SHORT).show();
+            //    e.printStackTrace();
+            //}
+            File filePath = Environment.getExternalStorageDirectory();
+            File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name) + "/");
+            if (!dir.exists()) {
+                boolean state = dir.mkdir();
+                if (!state) {
+                    try {
+                        Files.createDirectory(Paths.get(dir.getAbsolutePath()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+            ARAccess.copy(file2, new File(dir.getAbsolutePath() + "/" + file2.getName()));
         } else {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 55);
-                return;
-            }
-
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
-                return;
-            }
-
             File filePath = Environment.getExternalStorageDirectory();
             File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name) + "/");
             if (!dir.exists()) dir.mkdir();
