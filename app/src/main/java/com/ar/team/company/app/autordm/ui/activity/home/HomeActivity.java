@@ -96,6 +96,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     private void requestPermission(boolean isGranted) {
         // Checking:
         if (isGranted) {
+            // Checking:
+            importantPermissions();
             // Observers:
             initObservers();
         } else launcher.launch(requestPermName);
@@ -104,6 +106,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     private void initPermissionsAccess() {
         // Checking:
         if (ContextCompat.checkSelfPermission(this, requestPermName) == PackageManager.PERMISSION_GRANTED) {
+            // Checking:
+            importantPermissions();
             // Observers:
             initObservers();
         } else if (shouldShowRequestPermissionRationale(requestPermName)) {
@@ -117,6 +121,35 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         } else {
             // Asking for the permissions:
             launcher.launch(requestPermName);
+        }
+    }
+
+    private void importantPermissions(){
+        // Developing:
+        if (ContextCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_GRANTED) {
+            // Permission already granted:
+        } else if (shouldShowRequestPermissionRationale(perm)) {
+            // Initializing:
+            String mes = "We Cannot Start The App Without This Permissions";
+            Snackbar snackbar = Snackbar.make(binding.getRoot(), mes, Snackbar.LENGTH_INDEFINITE);
+            // Developing:
+            snackbar.setAction("ACCESS", view -> launcher.launch(perm));
+            snackbar.show();
+        } else {
+            // Permission not granted so we have to ask it:
+            launcher.launch(perm);
+        }
+        arPermissionsRequest = new ARPermissionsRequest(this);
+        arPermissionsRequest.runNotificationAccess();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
         }
     }
 
@@ -245,40 +278,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     }
 
     @Override
-    protected void onStart()
-    {
-        // Developing:
-        if (ContextCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_GRANTED) {
-            // Permission already granted:
-        } else if (shouldShowRequestPermissionRationale(perm)) {
-
-            // Initializing:
-            String mes = "We Cannot Start The App Without This Permissions";
-            Snackbar snackbar = Snackbar.make(binding.getRoot(), mes, Snackbar.LENGTH_INDEFINITE);
-            // Developing:
-            snackbar.setAction("ACCESS", view -> launcher.launch(perm));
-            snackbar.show();
-        } else {
-            // Permission not granted so we have to ask it:
-            launcher.launch(perm);
-        }
-
-        arPermissionsRequest = new ARPermissionsRequest(this);
-      arPermissionsRequest.runNotificationAccess();
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent();
-            String packageName = getPackageName();
-            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + packageName));
-                startActivity(intent);
-            }
-        }
-
+    protected void onStart() {
         super.onStart();
-
     }
 
     @Override

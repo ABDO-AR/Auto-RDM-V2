@@ -1,22 +1,12 @@
 package com.ar.team.company.app.autordm.ar.observer;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.os.FileObserver;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.core.app.NotificationCompat;
 
-import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.access.ARAccess;
-import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
-import com.ar.team.company.app.autordm.ui.activity.home.HomeActivity;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeViewModel;
 
 @SuppressWarnings("unused")
@@ -24,11 +14,8 @@ public class ARFilesObserver extends FileObserver {
 
     // Fields:
     private final Context context;
-    private final HomeViewModel model;
     private final String path;
-    private final ARPreferencesManager manager;
-    // TempData:
-    private static int tempVoices = 0;
+    private final HomeViewModel model;
     // Fields(Debugging):
     private static final String TAG = "ARFilesObserver";
 
@@ -37,10 +24,9 @@ public class ARFilesObserver extends FileObserver {
         // Super:
         super(path);
         // Initializing:
-        this.model = model;
-        this.path = path;
         this.context = context;
-        this.manager = new ARPreferencesManager(context);
+        this.path = path;
+        this.model = model;
     }
 
     // Method(Events):
@@ -58,14 +44,22 @@ public class ARFilesObserver extends FileObserver {
                 Log.d(TAG, "onEvent-S-Create: " + s);
                 // StartOperations:
                 model.startMediaOperations();
+                // Checking:
+                if (path.equals(ARAccess.WHATSAPP_VOICES_PATH)) {
+                    // It's voices observer:
+                    Log.d(TAG, "onEvent-S-Voices: " + s);
+                    // Start the new operations:
+                    ARFilesObserver observer = new ARFilesObserver(context, ARAccess.WHATSAPP_VOICES_PATH + "/" + s, model);
+                    // Start observing:
+                    observer.startWatching();
+                }
             }
         }
     }
 
-    // Methods(Reset):
-    public static void resetTempVoices() {
-        // Resting:
-        tempVoices = 0;
+    // Getters:
+    public String getPath() {
+        return path;
     }
 
     public Context getContext() {

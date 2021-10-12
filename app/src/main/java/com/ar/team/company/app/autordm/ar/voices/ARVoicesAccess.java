@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.ar.team.company.app.autordm.R;
 import com.ar.team.company.app.autordm.ar.access.ARAccess;
-import com.ar.team.company.app.autordm.ar.observer.ARFilesObserver;
 import com.ar.team.company.app.autordm.control.notifications.ARNotificationManager;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeActivity;
@@ -124,8 +123,8 @@ public class ARVoicesAccess {
             } else ARAccess.createTempDirAt(context, ARAccess.VOICES_DIR);
         }
         // ReRunObserver:
-        ARFilesObserver.resetTempVoices();
         HomeActivity.setVoicesObserver(true);
+        // ARFilesObserver.resetTempVoices();
         // Retuning:
         return voices;
     }
