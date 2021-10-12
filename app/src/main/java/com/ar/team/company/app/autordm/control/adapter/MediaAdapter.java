@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ar.team.company.app.autordm.R;
+import com.ar.team.company.app.autordm.ar.access.ARAccess;
 import com.ar.team.company.app.autordm.ar.images.ARImagesAccess;
 import com.ar.team.company.app.autordm.control.preferences.ARPreferencesManager;
 import com.ar.team.company.app.autordm.databinding.DocumentsItemViewBinding;
@@ -587,17 +588,9 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @SuppressLint("CheckResult")
     private void saveImage(Bitmap bitmap, File file) {
         OutputStream outputStream = null;
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 55);
-            return;
-        }
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
-            return;
-        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {  // check android 10 or more
             ContentResolver resolver = context.getContentResolver();
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "Image_" + ".jpg");
@@ -619,6 +612,15 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 e.printStackTrace();
             }
         } else {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 55);
+                return;
+            }
+
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
+                return;
+            }
             File filePath = Environment.getExternalStorageDirectory();
             File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name) + "/");
             dir.mkdir();
@@ -662,81 +664,7 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @SuppressLint("CheckResult")
     private void saveVideo(String localPath, File file2) {
         Toast.makeText(context, "lo: " + localPath, Toast.LENGTH_LONG).show();
-        /*     Uri uriVideo = Uri.parse(localPath);
 
-
-        File createdvideo = null;
-        ContentResolver resolver = context.getContentResolver();
-        String videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
-        ContentValues valuesvideos;
-        valuesvideos = new ContentValues();
-
-        if (Build.VERSION.SDK_INT >= 29) {
-            valuesvideos.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "Folder");
-            valuesvideos.put(MediaStore.Video.Media.TITLE, videoFileName);
-            valuesvideos.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
-            valuesvideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-            valuesvideos.put(
-                    MediaStore.Video.Media.DATE_ADDED,
-                    System.currentTimeMillis() / 1000);
-
-            Uri collection =
-                    MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-            uriVideo = resolver.insert(collection, valuesvideos);
-        } else {
-            String directory  = Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + File.separator + Environment.DIRECTORY_MOVIES + "/" + "YourFolder";
-            createdvideo = new File(localPath, videoFileName);
-
-            valuesvideos.put(MediaStore.Video.Media.TITLE, videoFileName);
-            valuesvideos.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
-            valuesvideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-            valuesvideos.put(
-                    MediaStore.Video.Media.DATE_ADDED,
-                    System.currentTimeMillis() / 1000);
-            valuesvideos.put(MediaStore.Video.Media.DATA, createdvideo.getAbsolutePath());
-
-            uriVideo = context.getContentResolver().insert(
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                    valuesvideos);
-        }
-
-        if (Build.VERSION.SDK_INT >= 29) {
-            valuesvideos.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
-            valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 1);
-        }
-
-        ParcelFileDescriptor pfd;
-        try {
-            pfd =context.getContentResolver().openFileDescriptor(uriVideo, "w");
-
-            FileOutputStream out = new FileOutputStream(pfd.getFileDescriptor());
-            // get the already saved video as fileinputstream
-            // The Directory where your file is saved
-            File storageDir = new File(
-                    context.getExternalFilesDir(Environment.DIRECTORY_MOVIES),
-                    "Folder");
-            //Directory and the name of your video file to copy
-            File videoFile = new File(file2, "VID-20211005-WA0002.mp4");
-            FileInputStream in = new FileInputStream(videoFile);
-
-            byte[] buf = new byte[8192];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-
-            out.close();
-            in.close();
-            pfd.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (Build.VERSION.SDK_INT >= 29) {
-            valuesvideos.clear();
-            valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 0);
-            context.getContentResolver().update(uriVideo, valuesvideos, null, null);
-        }*/
         OutputStream outputStream;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ContentResolver resolver = context.getContentResolver();
@@ -756,7 +684,20 @@ public class MediaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 e.printStackTrace();
             }
         } else {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 55);
+                return;
+            }
+
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 55);
+                return;
+            }
+
             File filePath = Environment.getExternalStorageDirectory();
+            File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name) + "/");
+            if (!dir.exists()) dir.mkdir();
+            ARAccess.copy(file2, new File(dir.getAbsolutePath() + "/" + file2.getName()));
             /*       File dir = new File(filePath.getAbsolutePath() + "/" + context.getString(R.string.app_name)+ "/" );
 
             dir.mkdir();
