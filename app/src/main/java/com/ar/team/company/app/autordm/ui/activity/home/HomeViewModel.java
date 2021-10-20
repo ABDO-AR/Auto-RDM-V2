@@ -1,7 +1,9 @@
 package com.ar.team.company.app.autordm.ui.activity.home;
 
 import android.app.Application;
+import android.content.pm.PackageManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -43,7 +45,8 @@ public class HomeViewModel extends AndroidViewModel {
         // Working:
         mediaThread = new Thread(this::mediaThread);
         // StartWorkingThread:
-        mediaThread.start();
+        if (isPackageInstalled("com.whatsapp", getApplication().getPackageManager())) mediaThread.start();
+        else Toast.makeText(getApplication().getApplicationContext(), "Whatsapp not found in this device", Toast.LENGTH_SHORT).show();
     }
 
     // Method(Thread):
@@ -85,6 +88,21 @@ public class HomeViewModel extends AndroidViewModel {
         Log.d(MediaAdapter.TAG, "MediaAdapter: " + removedFiles);
         // Developing:
         mediaMutableData.postValue(media);
+    }
+
+    // Method(Check):
+    @SuppressWarnings("SameParameterValue")
+    private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+        // Trying:
+        try {
+            // Checking:
+            packageManager.getPackageInfo(packageName, 0);
+            // Returning:
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            // Retuning:
+            return false;
+        }
     }
 
     // Getters(&Setters):
