@@ -158,8 +158,14 @@ public class ARImagesAccess {
         File[] files = new File(finalPath).listFiles(file -> isImages(file.getAbsolutePath()));
         // Checking:
         try {
-            // Initializing:
-            String tryingPath = Objects.requireNonNull(files)[0].getAbsolutePath();
+            // Checking:
+            try {
+                // Initializing:
+                String tryingPath = Objects.requireNonNull(files)[0].getAbsolutePath();
+            } catch (ArrayIndexOutOfBoundsException ea) {
+                // Returning:
+                return new File(finalPath2).listFiles(file -> isImages(file.getAbsolutePath()));
+            }
             // Returning:
             return files;
         } catch (NullPointerException e) {

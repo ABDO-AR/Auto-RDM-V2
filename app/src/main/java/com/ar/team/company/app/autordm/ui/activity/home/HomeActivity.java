@@ -9,15 +9,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.FileObserver;
 import android.os.PowerManager;
+import android.os.storage.StorageManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -46,6 +51,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 
+import java.io.File;
 import java.util.Objects;
 
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
@@ -98,6 +104,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         if (isGranted) {
             // Checking:
             importantPermissions();
+            // Asking(A-11):
+            android11StorageAccess();
             // Observers:
             initObservers();
         } else launcher.launch(requestPermName);
@@ -121,10 +129,12 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
         } else {
             // Asking for the permissions:
             launcher.launch(requestPermName);
+            // Asking(A-11):
+            android11StorageAccess();
         }
     }
 
-    private void importantPermissions(){
+    private void importantPermissions() {
         // Developing:
         if (ContextCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_GRANTED) {
             // Permission already granted:
@@ -151,6 +161,61 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
                 startActivity(intent);
             }
         }
+    }
+
+    // Method(ANDROID-11):
+    @SuppressLint("WrongConstant")
+    public void android11StorageAccess() {
+        // Checking:
+        if (Build.VERSION.SDK_INT >= 30) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Setting Dialog Title
+            builder.setTitle("Storage");
+            // Setting Dialog Message
+            builder.setMessage("We need your permission to start the app.");
+            // Setting Positive "Yes" Btn
+            builder.setPositiveButton("YES", (dialog, which) -> {
+                // Initializing:
+                StorageManager sm = (StorageManager) getSystemService(STORAGE_SERVICE);
+                String str = "android.provider.extra.INITIAL_URI";
+                String whatsAppStorageDir = getWhatsAppStorage();
+                Intent intent;
+                if (Build.VERSION.SDK_INT >= 30) {
+                    // Initializing:
+                    intent = sm.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
+                    String scheme = intent.getParcelableExtra(str).toString().replace("/root/", "/document/");
+                    // Preparing:
+                    String stringBuilder = scheme + "%3A" + whatsAppStorageDir;
+                    // Putting:
+                    intent.putExtra(str, Uri.parse(stringBuilder));
+                } else {
+                    // Initializing:
+                    intent = new Intent("android.intent.action.OPEN_DOCUMENT_TREE");
+                    // Putting:
+                    intent.putExtra(str, Uri.parse(whatsAppStorageDir));
+                }
+                // Adding(Flags):
+                intent.addFlags(2);
+                intent.addFlags(1);
+                intent.addFlags(128);
+                intent.addFlags(64);
+                // Starting:
+                startActivity(intent);
+            });
+            // Preparing:
+            builder.setCancelable(false);
+            // Showing Alert Dialog
+            builder.show();
+        }
+    }
+
+    private String getWhatsAppStorage() {
+        // Initializing:
+        File storagePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/WhatsApp/Media");
+        // Checking:
+        if (storagePath.exists()) return storagePath.getAbsolutePath();
+        else
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/com.whatsapp/WhatsApp/Media";
     }
 
     // Method(Observers):
