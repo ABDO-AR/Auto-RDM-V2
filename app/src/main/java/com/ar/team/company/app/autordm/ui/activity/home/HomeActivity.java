@@ -210,12 +210,8 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickList
     }
 
     private String getWhatsAppStorage() {
-        // Initializing:
-        File storagePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/WhatsApp/Media");
-        // Checking:
-        if (storagePath.exists()) return storagePath.getAbsolutePath();
-        else
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/com.whatsapp/WhatsApp/Media";
+        // Returning:
+        return "Android%2Fmedia%2Fcom.whatsapp%2FWhatsApp%2FMedia";
     }
 
     // Method(Observers):

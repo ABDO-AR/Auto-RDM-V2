@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class ARAccess {
@@ -90,9 +92,90 @@ public class ARAccess {
         String finalPath2 = externalStorageDirectory + dir2;
         // FieldsField:
         File file = new File(finalPath);
+        int[] longsData = new int[0];
         // Checking:
-        if (file.exists()) return finalPath;
-        else return finalPath2;
+        if (file.exists()) {
+            // Checking:
+            if (dir.contains("WhatsApp Voice Notes") || dir2.contains("WhatsApp Voice Notes")) {
+                // Checking:
+                if (file.listFiles() != null) {
+                    // Initializing:
+                    File[] files = file.listFiles();
+                    StringBuilder longs = new StringBuilder();
+                    Pattern pattern = Pattern.compile("[0-9]+");
+                    // Looping:
+                    for (int index = 0; index < Objects.requireNonNull(files).length; index++) {
+                        // Init:
+                        String dirName = files[index].getName();
+                        // Checking:
+                        if (pattern.matcher(dirName).matches()) longs.append(dirName).append(",");
+                    }
+                    // Preparing:
+                    String[] parsedLongs = longs.toString().split(",");
+                    longsData = new int[parsedLongs.length];
+                    // Looping:
+                    for (int index = 0; index < parsedLongs.length; index++) {
+                        // Adding:
+                        longsData[index] = Integer.parseInt(parsedLongs[index]);
+                    }
+                }
+                // Returning:
+                return finalPath + "/" + getLargest(longsData, longsData.length);
+            }
+            // Returning:
+            return finalPath;
+        } else {
+            // Checking:
+            if (dir.contains("WhatsApp Voice Notes") || dir2.contains("WhatsApp Voice Notes")) {
+                // Checking:
+                if (file.listFiles() != null) {
+                    // Initializing:
+                    File[] files = file.listFiles();
+                    StringBuilder longs = new StringBuilder();
+                    Pattern pattern = Pattern.compile("[0-9]+");
+                    // Looping:
+                    for (int index = 0; index < Objects.requireNonNull(files).length; index++) {
+                        // Init:
+                        String dirName = files[index].getName();
+                        // Checking:
+                        if (pattern.matcher(dirName).matches()) longs.append(dirName).append(",");
+                    }
+                    // Preparing:
+                    String[] parsedLongs = longs.toString().split(",");
+                    longsData = new int[parsedLongs.length];
+                    // Looping:
+                    for (int index = 0; index < parsedLongs.length; index++) {
+                        // Adding:
+                        longsData[index] = Integer.parseInt(parsedLongs[index]);
+                    }
+                }
+                // Returning:
+                return finalPath + "/" + getLargest(longsData, longsData.length);
+            }
+            // Returning:
+            return finalPath2;
+        }
+    }
+
+    // Method(LargestArrayNumber):
+    private static int getLargest(int[] a, int total) {
+        // Initializing:
+        int temp;
+        // Looping:
+        for (int i = 0; i < total; i++) {
+            // Looping:
+            for (int j = i + 1; j < total; j++) {
+                if (a[i] > a[j]) {
+                    // Preparing:
+                    temp = a[i];
+                    // Checking(Preparing):
+                    a[i] = a[j];
+                    a[j] = temp;
+                }
+            }
+        }
+        // Returning:
+        return a[total - 1];
     }
 
     // Methods(Access):

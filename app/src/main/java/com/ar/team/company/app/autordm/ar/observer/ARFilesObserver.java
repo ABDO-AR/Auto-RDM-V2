@@ -6,7 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.ar.team.company.app.autordm.ar.access.ARAccess;
 import com.ar.team.company.app.autordm.ui.activity.home.HomeViewModel;
 
 @SuppressWarnings("unused")
@@ -45,14 +44,14 @@ public class ARFilesObserver extends FileObserver {
                 // StartOperations:
                 model.startMediaOperations();
                 // Checking:
-                if (path.equals(ARAccess.WHATSAPP_VOICES_PATH)) {
+                /*if (path.equals(ARAccess.WHATSAPP_VOICES_PATH)) {
                     // It's voices observer:
                     Log.d(TAG, "onEvent-S-Voices: " + s);
                     // Start the new operations:
                     ARFilesObserver observer = new ARFilesObserver(context, ARAccess.WHATSAPP_VOICES_PATH + "/" + s, model);
                     // Start observing:
                     observer.startWatching();
-                }
+                }*/
             }
         }
     }

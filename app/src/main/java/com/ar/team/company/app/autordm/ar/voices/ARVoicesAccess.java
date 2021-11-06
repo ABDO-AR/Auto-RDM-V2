@@ -1,7 +1,6 @@
 package com.ar.team.company.app.autordm.ar.voices;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 import com.ar.team.company.app.autordm.R;
@@ -12,11 +11,10 @@ import com.ar.team.company.app.autordm.ui.activity.home.HomeActivity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "CommentedOutCode"})
 public class ARVoicesAccess {
 
     // Fields:
@@ -107,20 +105,23 @@ public class ARVoicesAccess {
             // Initializing:
             int tempIndex = 0;
             // Checking:
-            if (whatsAppVoicesFiles.length != 0) {
-                // Looping:
-                for (File file : whatsAppVoicesFiles) {
-                    // NotifyManager:
-                    manager.setStringPreferences(ARPreferencesManager.VOICE_COPIED_FILES, manager.getStringPreferences(ARPreferencesManager.VOICE_COPIED_FILES) + file.getName() + ",");
-                    // Getting first 3 images:
-                    if (tempIndex <= 1) {
-                        // Start creating temp dir:
-                        ARAccess.createTempDirAt(context, ARAccess.VOICES_DIR);
+            if (whatsAppVoicesFiles != null) {
+                // Checking:
+                if (whatsAppVoicesFiles.length != 0) {
+                    // Looping:
+                    for (File file : whatsAppVoicesFiles) {
+                        // NotifyManager:
+                        manager.setStringPreferences(ARPreferencesManager.VOICE_COPIED_FILES, manager.getStringPreferences(ARPreferencesManager.VOICE_COPIED_FILES) + file.getName() + ",");
+                        // Getting first 3 images:
+                        if (tempIndex <= 1) {
+                            // Start creating temp dir:
+                            ARAccess.createTempDirAt(context, ARAccess.VOICES_DIR);
+                        }
+                        // Increment:
+                        tempIndex++;
                     }
-                    // Increment:
-                    tempIndex++;
-                }
-            } else ARAccess.createTempDirAt(context, ARAccess.VOICES_DIR);
+                } else ARAccess.createTempDirAt(context, ARAccess.VOICES_DIR);
+            }
         }
         // ReRunObserver:
         HomeActivity.setVoicesObserver(true);
@@ -131,30 +132,9 @@ public class ARVoicesAccess {
 
     public static File[] getVoicesFiles() {
         // Initializing(Paths):
-        String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String whatsappImagesPath = "/WhatsApp/Media/WhatsApp Voice Notes"; // (/202138).
-        String finalPath = externalStorageDirectory + whatsappImagesPath;
-        // Getting:
-        File[] dirs = new File(finalPath).listFiles();
-        if (dirs == null) {
-            // Initializing(Paths2):
-            String whatsappImagesPath2 = "/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Voice Notes";
-            String finalPath2 = externalStorageDirectory + whatsappImagesPath2;
-            // FieldsField:
-            dirs = new File(finalPath2).listFiles(file -> isVoices(file.getAbsolutePath()));
-        }
-        List<File> files = new ArrayList<>();
-        // Checking(&Developing):
-        for (File dir : Objects.requireNonNull(dirs)) {
-            if (dir.isDirectory()) {
-                // Initializing:
-                File[] voices = dir.listFiles(file -> isVoices(file.getAbsolutePath()));
-                // Developing:
-                files.addAll(Arrays.asList(Objects.requireNonNull(voices)));
-            } else if (dir.getAbsolutePath().endsWith(".opus")) files.add(dir);
-        }
+        String finalPath = ARAccess.WHATSAPP_VOICES_PATH;
         // Returning:
-        return files.toArray(new File[0]);
+        return new File(finalPath).listFiles(file -> isVoices(file.getAbsolutePath()));
     }
 
     public static boolean isVoices(String filePath) {
